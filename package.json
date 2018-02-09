@@ -1,0 +1,13 @@
+{
+  "name": "node-instance-manager",
+  "version": "1.0.0",
+  "description": "A Node.js application to manage multiple Node.js applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kilian Henkel",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
