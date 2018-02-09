@@ -1,7 +1,8 @@
+const logger = require('./logger');
 const logs = require('./logs');
 const repository = require('./repository');
 const processes = require('./processes');
-const { groups } = require('./config');
+const groups = require('./groups');
 
 const log = (app) => {
   logs.showLog(app);
@@ -9,15 +10,13 @@ const log = (app) => {
 
 const ls = () => {
   repository.getAppNames().forEach(appName => {
-    const status = processes.isAppRunning(appName) ? 'Running': 'Stopped'
-    console.log(`${appName}: ${status}`);
+    processes.isAppRunning(appName) ? 
+      logger.positive('Running', appName) : logger.negative('Stopped', appName);
   });
 };
 
 const lsGroups = () => {
-  Object.keys(groups).forEach(group => {
-    console.log(` ${group}`);
-  });
+  groups.listGroups();
 };
 
 const start = (appName) => {
@@ -29,21 +28,16 @@ const stop = (appName) => {
 };
 
 const startGroup = (groupName) => {
-  if (!groups[groupName]) {
-    console.log(`Group ${groupName} not found.`)
-    return;
-  }
-
-  groups[groupName].forEach(appName => processes.startApp(appName));
+  groups.startGroup(groupName);
 };
 
 const stopGroup = (groupName) => {
-  if (!groups[groupName]) {
-    console.log(`Group ${groupName} not found.`)
-    return;
-  }
+  groups.stopGroup(groupName);
+};
 
-  groups[groupName].forEach(appName => processes.stopApp(appName));
+const exit = () => {
+  logger.info('Bye!');
+  process.exit(0);
 };
 
 const commands = {
@@ -54,13 +48,27 @@ const commands = {
   stop,
   'start-group': startGroup,
   'stop-group': stopGroup,
+  exit,
+  quit: exit,
 };
 
+const commandDescription = {
+  log: '[app] \t\t\tOutput log for app',
+  ls: '\t\t\t\tList all apps from config',
+  'ls-groups': '\t\t\tList all groups from config',
+  start: '[app] \t\t\tStart app',
+  stop: '[app] \t\t\tStop app',
+  'start-group': '[group] \t\tStart group',
+  'stop-group': '[group] \t\tStop group',
+};
+
+const hiddenCommands = ['help', 'exit', 'quit'];
+
 const help = () => {
-  console.log(`The following commands are available:`);
+  logger.info(`The following commands are available:`);
   Object.keys(commands).forEach(key => {
-    if (key !== 'help') {
-      console.log(` ${key}`);
+    if (!hiddenCommands.includes(key)) {
+      logger.info(` ${key} ${commandDescription[key] || ''}`);
     }
   });
 };

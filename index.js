@@ -1,8 +1,17 @@
+const logger = require('./src/logger');
+
+require('./validateConfig')()
+  .catch(error => {
+    logger.info('');
+    logger.error(error);
+    process.exit(1);
+  });
+
 const { spawn } = require('child_process');
 const readline = require('readline');
-const repository = require('./repository');
-const commands = require('./commands');
-const processes = require('./processes');
+const repository = require('./src/repository');
+const commands = require('./src/commands');
+const processes = require('./src/processes');
 
 const rl = readline.createInterface({
   input: process.stdin,
