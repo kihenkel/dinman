@@ -18,6 +18,12 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+const arguments = process.argv.slice(2);
+if (arguments && arguments.length) {
+  logger.info(`Starting with groups ${arguments}`);
+  arguments.forEach(argument => commands.run('start-group', argument));
+}
+
 rl.on('line', (input) => {
   [command, ...args] = input.split(' ');
   commands.run(command, ...args);

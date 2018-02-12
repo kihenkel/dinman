@@ -41,11 +41,11 @@ const exit = () => {
 };
 
 const commands = {
-  log,
   ls,
   'ls-groups': lsGroups,
   start,
   stop,
+  log,
   'start-group': startGroup,
   'stop-group': stopGroup,
   exit,
