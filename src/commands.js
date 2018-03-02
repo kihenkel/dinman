@@ -4,6 +4,11 @@ const repository = require('./repository');
 const processes = require('./processes');
 const groups = require('./groups');
 
+const ParamType = {
+  group: 'group',
+  app: 'app',
+};
+
 const log = (app) => {
   logs.showLog(app);
 };
@@ -41,15 +46,15 @@ const exit = () => {
 };
 
 const commands = {
-  ls,
-  'ls-groups': lsGroups,
-  start,
-  stop,
-  log,
-  'start-group': startGroup,
-  'stop-group': stopGroup,
-  exit,
-  quit: exit,
+  ls: { expects: undefined, exec: ls },
+  'ls-groups': { expects: ParamType.group, exec: lsGroups },
+  start: { expects: ParamType.app, exec: start },
+  stop: { expects: ParamType.app, exec: stop },
+  log: { expects: ParamType.app, exec: log },
+  'start-group': { expects: ParamType.group, exec: startGroup },
+  'stop-group': { expects: ParamType.group, exec: stopGroup },
+  exit: { expects: undefined, exec: exit },
+  quit: { expects: undefined, exec: exit },
 };
 
 const commandDescription = {
@@ -73,15 +78,17 @@ const help = () => {
   });
 };
 
-commands['help'] = help;
+commands['help'] = { expects: undefined, exec: help };
 
 module.exports = {
   run: (command, ...args) => {
     if (commands[command]) {
-      commands[command](...args);
+      commands[command].exec(...args);
       return true;
     }
     console.log(`Unknown command ${command}`);
     return false;
-  }
+  },
+  commands,
+  ParamType,
 };

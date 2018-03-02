@@ -12,10 +12,12 @@ const readline = require('readline');
 const repository = require('./src/repository');
 const commands = require('./src/commands');
 const processes = require('./src/processes');
+const completer = require('./src/completer');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+  completer,
 });
 
 const arguments = process.argv.slice(2);
