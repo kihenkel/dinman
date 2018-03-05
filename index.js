@@ -26,10 +26,10 @@ if (arguments && arguments.length) {
   arguments.forEach(argument => commands.run('start-group', argument));
 }
 
-rl.on('line', (input) => {
+rl.on('line', async (input) => {
   [command, ...args] = input.split(' ');
-  commands.run(command, ...args);
-  process.stdout.write('\> ');
+  await commands.run(command, ...args);
+  rl.prompt();
 });
 
-process.stdout.write('\> ');
+rl.prompt();

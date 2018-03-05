@@ -60,10 +60,39 @@ const stopApp = (appName) => {
   return true;
 };
 
+const restartApp = (appName) => {
+  return new Promise((resolve, reject) => {
+    const app = repository.getAppByName(appName);
+    if (!app) {
+      console.log(`App ${appName} not found.`);
+      return reject();
+    }
+
+    if (!activeProcesses[app.name]) {
+      console.log(`App ${app.name} is not running.`);
+      return reject();
+    }
+
+    console.log(`Restarting ${app.name} ...`);
+
+    activeProcesses[app.name].on('exit', () => {
+      delete activeProcesses[app.name];
+      startApp(appName);
+      resolve();
+    });
+
+    const stopSuccessful = stopApp(appName);
+    if (!stopSuccessful) {
+      reject();
+    }
+  });
+};
+
 const isAppRunning = (appName) => !!activeProcesses[appName];
 
 module.exports = {
   startApp,
   stopApp,
+  restartApp,
   isAppRunning,
 };

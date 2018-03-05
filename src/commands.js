@@ -24,8 +24,12 @@ const lsGroups = () => {
   groups.listGroups();
 };
 
-const start = (appName) => {
+const start = async (appName) => {
   processes.startApp(appName);
+};
+
+const restart = async (appName) => {
+  await processes.restartApp(appName);
 };
 
 const stop = (appName) => {
@@ -49,6 +53,7 @@ const commands = {
   ls: { expects: undefined, exec: ls },
   'ls-groups': { expects: ParamType.group, exec: lsGroups },
   start: { expects: ParamType.app, exec: start },
+  restart: { expects: ParamType.app, exec: restart },
   stop: { expects: ParamType.app, exec: stop },
   log: { expects: ParamType.app, exec: log },
   'start-group': { expects: ParamType.group, exec: startGroup },
@@ -58,13 +63,14 @@ const commands = {
 };
 
 const commandDescription = {
-  log: '[app] \t\t\tOutput log for app',
-  ls: '\t\t\t\tList all apps from config',
-  'ls-groups': '\t\t\tList all groups from config',
-  start: '[app] \t\t\tStart app',
-  stop: '[app] \t\t\tStop app',
-  'start-group': '[group] \t\tStart group',
-  'stop-group': '[group] \t\tStop group',
+  log: 'Output log for app',
+  ls: 'List all apps from config',
+  'ls-groups': 'List all groups from config',
+  start: 'Start app',
+  restart: 'Restart app',
+  stop: 'Stop app',
+  'start-group': 'Start group',
+  'stop-group': 'Stop group',
 };
 
 const hiddenCommands = ['help', 'exit', 'quit'];
@@ -73,7 +79,15 @@ const help = () => {
   logger.info(`The following commands are available:`);
   Object.keys(commands).forEach(key => {
     if (!hiddenCommands.includes(key)) {
-      logger.info(` ${key} ${commandDescription[key] || ''}`);
+      let line = ` ${key}`;
+      const command = commands[key];
+      if (command.expects) {
+        line += ` [${command.expects}]`;
+      }
+      for (let i = line.length; i < 32; i++) { line += ' ' }
+      line += ` ${commandDescription[key] || ''}`;
+
+      logger.info(line);
     }
   });
 };
@@ -81,9 +95,9 @@ const help = () => {
 commands['help'] = { expects: undefined, exec: help };
 
 module.exports = {
-  run: (command, ...args) => {
+  run: async (command, ...args) => {
     if (commands[command]) {
-      commands[command].exec(...args);
+      await commands[command].exec(...args);
       return true;
     }
     console.log(`Unknown command ${command}`);
