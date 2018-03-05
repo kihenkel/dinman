@@ -43,21 +43,29 @@ const startApp = (appName) => {
   return childProcess;
 };
 
-const stopApp = (appName) => {
+const stopApp = (appName, { silentOnFail = false }) => {
   const app = repository.getAppByName(appName);
   if (!app) {
+    if (!silentOnFail) logger.info(`App ${appName} not found.`);
     logger.info(`App ${appName} not found.`);
     return false;
   }
 
   if (!activeProcesses[app.name]) {
-    logger.info(`App ${app.name} is not running.`);
+    if (!silentOnFail) logger.info(`App ${app.name} is not running.`);
     return false;
   }
 
   logger.info(`Stopping ${app.name} ...`);
   activeProcesses[app.name].kill('SIGTERM');
   return true;
+};
+
+const stopAll = () => {
+  logger.info(`Stopping all apps ...`);
+  Object.keys(activeProcesses).forEach(key => {
+    stopApp(key, { silent: true });
+  })
 };
 
 const restartApp = (appName) => {
@@ -93,6 +101,7 @@ const isAppRunning = (appName) => !!activeProcesses[appName];
 module.exports = {
   startApp,
   stopApp,
+  stopAll,
   restartApp,
   isAppRunning,
 };

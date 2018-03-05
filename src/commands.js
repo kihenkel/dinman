@@ -36,6 +36,10 @@ const stop = (appName) => {
   processes.stopApp(appName);
 };
 
+const stopAll = () => {
+  processes.stopAll();
+};
+
 const startGroup = (groupName) => {
   groups.startGroup(groupName);
 };
@@ -55,6 +59,7 @@ const commands = {
   start: { expects: ParamType.app, exec: start },
   restart: { expects: ParamType.app, exec: restart },
   stop: { expects: ParamType.app, exec: stop },
+  'stop-all': { expects: undefined, exec: stopAll },
   log: { expects: ParamType.app, exec: log },
   'start-group': { expects: ParamType.group, exec: startGroup },
   'stop-group': { expects: ParamType.group, exec: stopGroup },
@@ -69,6 +74,7 @@ const commandDescription = {
   start: 'Start app',
   restart: 'Restart app',
   stop: 'Stop app',
+  'stop-all': 'Stop all apps',
   'start-group': 'Start group',
   'stop-group': 'Stop group',
 };

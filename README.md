@@ -44,6 +44,7 @@ The node-instance-manager provides a shell with the following commands:
 - `start [app]` - Starts an app
 - `restart [app]` - Restarts an app
 - `stop [app]` - Stops an app
+- `stop-all` - Stops all running apps
 - `log [app]` - Outputs the log for an app
 - `start-group [group]` - Starts a group
 - `stop-group [group]` - Stops a group
