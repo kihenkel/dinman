@@ -55,7 +55,7 @@ const exit = () => {
 
 const commands = {
   ls: { expects: undefined, exec: ls },
-  'ls-groups': { expects: ParamType.group, exec: lsGroups },
+  'ls-groups': { expects: undefined, exec: lsGroups },
   start: { expects: ParamType.app, exec: start },
   restart: { expects: ParamType.app, exec: restart },
   stop: { expects: ParamType.app, exec: stop },
