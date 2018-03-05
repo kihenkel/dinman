@@ -7,6 +7,11 @@ const defaults = require('./defaults');
 const activeProcesses = {};
 let input;
 
+const _handleOnChildProcessExit = (appName) => {
+  delete activeProcesses[appName];
+  logs.onAppExit(appName);
+}
+
 const startApp = (appName) => {
   const app = repository.getAppByName(appName);
   if (!app) {
@@ -38,7 +43,7 @@ const startApp = (appName) => {
   });
 
   childProcess.on('exit', () => {
-    delete activeProcesses[app.name];
+    _handleOnChildProcessExit(app.name);
   });
 
   activeProcesses[app.name] = childProcess;
@@ -87,7 +92,7 @@ const restartApp = (appName) => {
     logger.info(`Restarting ${app.name} ...`);
 
     activeProcesses[app.name].on('exit', () => {
-      delete activeProcesses[app.name];
+      _handleOnChildProcessExit(app.name);
       startApp(appName);
       resolve();
     });
