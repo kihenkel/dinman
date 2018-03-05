@@ -29,7 +29,11 @@ const start = async (appName) => {
 };
 
 const restart = async (appName) => {
-  await processes.restartApp(appName);
+  try {
+    await processes.restartApp(appName);
+  } catch (error) {
+    logger.error(`Error while restarting app ${appName}:`, error);
+  }
 };
 
 const stop = (appName) => {

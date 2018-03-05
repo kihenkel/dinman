@@ -7,18 +7,11 @@ require('./validateConfig')()
     process.exit(1);
   });
 
-const { spawn } = require('child_process');
-const readline = require('readline');
-const repository = require('./src/repository');
+const input = require('./src/input');
 const commands = require('./src/commands');
-const processes = require('./src/processes');
-const completer = require('./src/completer');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  completer,
-});
+const { name, version } = require('./package.json');
+logger.info(`\n${name} ${version}`);
 
 const arguments = process.argv.slice(2);
 if (arguments && arguments.length) {
@@ -26,10 +19,4 @@ if (arguments && arguments.length) {
   arguments.forEach(argument => commands.run('start-group', argument));
 }
 
-rl.on('line', async (input) => {
-  [command, ...args] = input.split(' ');
-  await commands.run(command, ...args);
-  rl.prompt();
-});
-
-rl.prompt();
+input.listen();

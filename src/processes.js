@@ -5,6 +5,7 @@ const logger = require('./logger');
 const defaults = require('./defaults');
 
 const activeProcesses = {};
+let input;
 
 const startApp = (appName) => {
   const app = repository.getAppByName(appName);
@@ -28,6 +29,8 @@ const startApp = (appName) => {
 
   childProcess.stderr.on('data', (data) => {
     logger.error(`${app.name}: ${data}`);
+    if (!input) input = require('./input');
+    input.prompt();
   });
 
   childProcess.on('error', (error) => {
@@ -43,7 +46,7 @@ const startApp = (appName) => {
   return childProcess;
 };
 
-const stopApp = (appName, { silentOnFail = false }) => {
+const stopApp = (appName, { silentOnFail = false } = {}) => {
   const app = repository.getAppByName(appName);
   if (!app) {
     if (!silentOnFail) logger.info(`App ${appName} not found.`);
@@ -73,12 +76,12 @@ const restartApp = (appName) => {
     const app = repository.getAppByName(appName);
     if (!app) {
       logger.info(`App ${appName} not found.`);
-      return reject();
+      return resolve();
     }
 
     if (!activeProcesses[app.name]) {
       logger.info(`App ${app.name} is not running.`);
-      return reject();
+      return resolve();
     }
 
     logger.info(`Restarting ${app.name} ...`);
@@ -89,10 +92,7 @@ const restartApp = (appName) => {
       resolve();
     });
 
-    const stopSuccessful = stopApp(appName);
-    if (!stopSuccessful) {
-      reject();
-    }
+    stopApp(appName);
   });
 };
 
