@@ -14,7 +14,7 @@ const log = (app) => {
 };
 
 const ls = () => {
-  repository.getAppNames().forEach(appName => {
+  repository.getAppNames().sort().forEach(appName => {
     processes.isAppRunning(appName) ? 
       logger.positive('Running', appName) : logger.negative('Stopped', appName);
   });
@@ -86,6 +86,7 @@ const commandDescription = {
 const hiddenCommands = ['help', 'exit', 'quit'];
 
 const help = () => {
+  logger.newLine();
   logger.info(`The following commands are available:`);
   Object.keys(commands).forEach(key => {
     if (!hiddenCommands.includes(key)) {

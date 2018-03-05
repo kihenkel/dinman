@@ -37,6 +37,10 @@ const clearConsole = () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
 };
 
+const newLine = () => {
+  process.stdout.write('\n');
+}
+
 module.exports = {
   error,
   warning,
@@ -44,4 +48,5 @@ module.exports = {
   positive,
   negative,
   clearConsole,
+  newLine,
 };
