@@ -9,17 +9,17 @@ const activeProcesses = {};
 const startApp = (appName) => {
   const app = repository.getAppByName(appName);
   if (!app) {
-    console.log(`App ${appName} not found.`);
+    logger.info(`App ${appName} not found.`);
     return false;
   }
 
   if (activeProcesses[app.name]) {
-    console.log(`App ${app.name} is already running!`);
+    logger.info(`App ${app.name} is already running!`);
     return false;
   }
 
   const childProcess = spawn(`node`, [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
-  console.log(`Starting ${app.name} ...`);
+  logger.info(`Starting ${app.name} ...`);
   app.running = true;
 
   childProcess.stdout.on('data', (data) => {
@@ -27,7 +27,7 @@ const startApp = (appName) => {
   });
 
   childProcess.stderr.on('data', (data) => {
-    logger.error(data);
+    logger.error(`${app.name}: ${data}`);
   });
 
   childProcess.on('error', (error) => {
@@ -46,16 +46,16 @@ const startApp = (appName) => {
 const stopApp = (appName) => {
   const app = repository.getAppByName(appName);
   if (!app) {
-    console.log(`App ${appName} not found.`);
+    logger.info(`App ${appName} not found.`);
     return false;
   }
 
   if (!activeProcesses[app.name]) {
-    console.log(`App ${app.name} is not running.`);
+    logger.info(`App ${app.name} is not running.`);
     return false;
   }
 
-  console.log(`Stopping ${app.name} ...`);
+  logger.info(`Stopping ${app.name} ...`);
   activeProcesses[app.name].kill('SIGTERM');
   return true;
 };
@@ -64,16 +64,16 @@ const restartApp = (appName) => {
   return new Promise((resolve, reject) => {
     const app = repository.getAppByName(appName);
     if (!app) {
-      console.log(`App ${appName} not found.`);
+      logger.info(`App ${appName} not found.`);
       return reject();
     }
 
     if (!activeProcesses[app.name]) {
-      console.log(`App ${app.name} is not running.`);
+      logger.info(`App ${app.name} is not running.`);
       return reject();
     }
 
-    console.log(`Restarting ${app.name} ...`);
+    logger.info(`Restarting ${app.name} ...`);
 
     activeProcesses[app.name].on('exit', () => {
       delete activeProcesses[app.name];

@@ -42,6 +42,7 @@ The node-instance-manager provides a shell with the following commands:
 - `ls` - Lists all apps from config
 - `ls-groups` - Lists all groups from config
 - `start [app]` - Starts an app
+- `restart [app]` - Restarts an app
 - `stop [app]` - Stops an app
 - `log [app]` - Outputs the log for an app
 - `start-group [group]` - Starts a group
