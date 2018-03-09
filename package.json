@@ -1,10 +1,11 @@
 {
-  "name": "node-instance-manager",
+  "name": "dinman",
   "version": "1.1.0",
-  "description": "A Node.js application to manage multiple Node.js applications",
+  "description": "A Node.js application that manages other Node.js applications on-demand on a dependency basis.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildconfig": "node configBuilder/index.js"
   },
   "author": "Kilian Henkel",
   "license": "ISC",
