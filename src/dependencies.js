@@ -5,6 +5,7 @@ if (require.resolve('./../config/dependencyConfig.json')) {
 const looseDependencyTypes = dependencyConfig.looseDependencyTypes || [];
 const repository = require('./repository');
 const processes = require('./processes');
+const logger = require('./logger');
 
 const isLooseDependency = (app, dependencyApp) =>
   looseDependencyTypes.some(looseDependencyType =>
@@ -29,6 +30,12 @@ const _startAppWithDependencies = (app, appsToStart) => {
 
 const startApp = (appName) => {
   const app = repository.getAppByName(appName);
+
+  if (!app) {
+    logger.info(`App ${appName} not found.`);
+    return;
+  }
+
   _startAppWithDependencies(app, []);
 }
 
