@@ -35,7 +35,7 @@ const registerApp = (folder) => {
     logger.info(`Detected app ${packageJson.name}`);
     detectedApps.push({
       name: packageJson.name,
-      port: packageJson.config.port,
+      port: parseInt(packageJson.config.port, 10),
       path: folder,
       dependencies: [],
       entry: packageJson.main,
@@ -48,7 +48,8 @@ const lookupAppForPort = (port) => {
 };
 
 const hasCircularDependency = (appA, appB) => {
-  return appA.dependencies.includes(appB) || appB.dependencies.includes(appA);
+  return appA.dependencies.includes(appB) || 
+    appB.dependencies.includes(appA);
 };
 
 const registerDependenciesForConfig = (config, app) => {
@@ -78,6 +79,7 @@ const registerDependenciesForConfig = (config, app) => {
     if (hasCircularDependency(app, lookupApp)) {
       logger.warning(`Circular dependency found for app ${app.name} and ${lookupApp.name}!`);
     }
+
     if (!app.dependencies.includes(lookupApp)) {
       logger.info(`${app.name}: Adding ${lookupApp.name} as dependency.`);
       app.dependencies.push(lookupApp);
