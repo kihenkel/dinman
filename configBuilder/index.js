@@ -4,8 +4,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const stripJsonComments = require('strip-json-comments');
 const logger = require('./../src/logger');
-const sanitizeJson = require('./sanitizeJson');
+const generateJsonFromConfig = require('./generateJsonFromConfig');
 
 const detectedApps = [];
 
@@ -15,7 +16,7 @@ if (paths.length <= 0) {
   return process.exit(0);
 }
 
-const registerAppName = (folder) => {
+const registerApp = (folder) => {
   const packageJsonPath = path.join(folder, 'package.json');
   const packageJsonExists = fs.statSync(packageJsonPath);
   if (!packageJsonExists) {
@@ -30,26 +31,58 @@ const registerAppName = (folder) => {
     logger.error(`Can't parse file ${packageJsonPath}. Error: ${error}`);
     return;
   }
-  if (packageJson.name && !detectedApps.includes(packageJson.name)) {
+  if (packageJson.name && !detectedApps.includes(packageJson.name) && packageJson.config && packageJson.config.port) {
     logger.info(`Detected app ${packageJson.name}`);
-    detectedApps.push({ name: packageJson.name, path: folder, dependencies: [] });
+    detectedApps.push({
+      name: packageJson.name,
+      port: packageJson.config.port,
+      path: folder,
+      dependencies: [],
+      entry: packageJson.main,
+    });
   }
 };
 
-const tryParseDependency = (app, api) => {
-  const formatted = api.replace(/([A-Z])/g, '-$1').toLowerCase();
-  const trimmed = formatted.replace('-url', '');
-  if (!trimmed.endsWith('-service')) {
-    logger.warning(`${trimmed} doesnt end with service`);
-  }
+const lookupAppForPort = (port) => {
+  return detectedApps.find(app => app.port === port);
+};
 
-  const matching = detectedApps.filter(detectedApp => 
-    detectedApp.name.match(new RegExp(`^(vc-|veve-|c24-)${trimmed}(-|$)`, 'g'))
-  );
-  if (matching && matching.length > 0) {
-    logger.info(`Dependencies found for ${app.name}: ${matching.map(match => match.name)}`);
-    app.dependencies.push()
+const hasCircularDependency = (appA, appB) => {
+  return appA.dependencies.includes(appB) || appB.dependencies.includes(appA);
+};
+
+const registerDependenciesForConfig = (config, app) => {
+  if (!config) {
+    logger.verbose(`Skipping config for app ${app.name} because config doesnt exist`);
+    return;
   }
+  const configKeys = Object.keys(config);
+  configKeys.forEach(configKey => {
+    const configValue = config[configKey];
+    if (typeof configValue !== 'string') {
+      logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configKey} is not string but ${typeof configValue}`);
+      return;
+    }
+    const match = configValue.match(/localhost:(\d+)\//);
+    if (!match || match.length !== 2) {
+      logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configValue} doesnt contain port.`);
+      return;
+    }
+    const port = parseInt(match[1], 10)
+    const lookupApp = lookupAppForPort(port);
+    if (!lookupApp) {
+      logger.verbose(`Skipping ${configKey} for app ${app.name} because couldnt find app for port ${port}.`);
+      return;
+    }
+
+    if (hasCircularDependency(app, lookupApp)) {
+      logger.warning(`Circular dependency found for app ${app.name} and ${lookupApp.name}!`);
+    }
+    if (!app.dependencies.includes(lookupApp)) {
+      logger.info(`${app.name}: Adding ${lookupApp.name} as dependency.`);
+      app.dependencies.push(lookupApp);
+    }
+  });
 };
 
 const readConfigFromFolder = (app) => {
@@ -59,12 +92,14 @@ const readConfigFromFolder = (app) => {
     logger.info(`${defaultJsonPath} doesn't exist.`);
     return;
   }
-  const configRaw = fs.readFileSync(defaultJsonPath, 'utf8');
+  let configRaw = fs.readFileSync(defaultJsonPath, 'utf8');
+  configRaw = stripJsonComments(configRaw);
   let config;
   try {
     config = JSON.parse(configRaw);
   } catch (error) {
     logger.error(`Can't parse file ${defaultJsonPath}. Error: ${error}`);
+    logger.error(`Skipping app ${app.name}!`);
     return;
   }
 
@@ -73,19 +108,17 @@ const readConfigFromFolder = (app) => {
     return;
   }
 
-  if (config.api) {
-    const configKeys = Object.keys(config.api);
-    configKeys.forEach(key => tryParseDependency(app, key));
-  }
-
-  const configKeys = Object.keys(config);
-  configKeys.forEach(key => tryParseDependency(app, key));
+  registerDependenciesForConfig(config.api, app);
+  registerDependenciesForConfig(config, app);
 };
 
 paths.forEach(paramPath => {
   const allFiles = fs.readdirSync(paramPath).map(file => path.join(paramPath, file));
   const folders = allFiles.filter(file => fs.statSync(file).isDirectory());
-  folders.forEach(registerAppName);
+  folders.forEach(registerApp);
 });
 
 detectedApps.forEach(readConfigFromFolder);
+
+fs.writeFileSync('config/config.json', generateJsonFromConfig(detectedApps), 'utf8');
+logger.info('Wrote to file config/config.json!');

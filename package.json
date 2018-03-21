@@ -9,5 +9,7 @@
   },
   "author": "Kilian Henkel",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "strip-json-comments": "^2.0.1"
+  }
 }

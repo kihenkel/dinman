@@ -1,6 +1,7 @@
 const logger = require('./logger');
 const logs = require('./logs');
 const repository = require('./repository');
+const dependencies = require('./dependencies');
 const processes = require('./processes');
 const groups = require('./groups');
 
@@ -25,7 +26,7 @@ const lsGroups = () => {
 };
 
 const start = async (appName) => {
-  processes.startApp(appName);
+  dependencies.startApp(appName);
 };
 
 const restart = async (appName) => {

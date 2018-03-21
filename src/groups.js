@@ -1,4 +1,4 @@
-const { groups } = require('./../config');
+const { groups } = require('./../config/config.json');
 const logger = require('./logger');
 const processes = require('./processes');
 

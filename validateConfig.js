@@ -4,12 +4,12 @@ const defaults = require('./src/defaults');
 module.exports = () => {
   return new Promise((resolve, reject) => {
     try {
-      require.resolve('./config');
+      require.resolve('./config/config.json');
     } catch (err) {
-      logger.error('Error resolving config. Did you add config/index.js?');
+      logger.error('Error resolving config. Did you add config/config.json?');
       return;
     }
-    const { apps, groups } = require('./config');
+    const { apps, groups } = require('./config/config.json');
 
     if (!apps) {
       return reject('No apps defined');

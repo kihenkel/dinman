@@ -25,6 +25,10 @@ const info = (msg) => {
   _log(msg);
 };
 
+const verbose = (msg) => {
+  //_log(msg);
+};
+
 const positive = (tag, msg) => {
   _withColoredTag(tag, Color.green, msg);
 };
@@ -45,6 +49,7 @@ module.exports = {
   error,
   warning,
   info,
+  verbose,
   positive,
   negative,
   clearConsole,

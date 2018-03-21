@@ -1,5 +1,6 @@
 const { commands, ParamType } = require('./commands');
-const groupNames = Object.keys(require('./../config').groups);
+const groups = require('./../config/config.json').groups || {};
+const groupNames = Object.keys(groups);
 const appNames = require('./repository').getAppNames();
 
 const commandNames = Object.keys(commands);
