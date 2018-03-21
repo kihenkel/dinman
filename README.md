@@ -16,13 +16,14 @@ You can pass as many paths as you wish. Note that those paths have to point to t
 The log output should give you hints if it worked as intended. In the end you should have a generated `config.json` in your `config` folder.
 Now start dinman via `node .\index.js` and use the available commands. (refer to [node-instance-manager](https://github.com/kihenkel/node-instance-manager "node-instance-manager"), the usage is identical)
 
-## <a name="applicationType"></a>Application type
+## Application type
 The config builder automatically determines an application's type. Right now the pattern is very simple:
-Assuming that the app name is built with dashes it takes the very last part. Eg. `my-cool-service` will resolve to type `service`, `that-awesome-application` will resolve to `application`.
+
+Assuming that the app name is built with dashes, it takes the very last part. Eg. `my-cool-service` will resolve to type `service`, `that-awesome-application` will resolve to type `application`.
 
 ## Loose dependencies
 Sometimes even though there is a dependency from one application to another, you don't want it to start automatically (eg. dependency from a backend service to a frontend website).
-You can configure this as a *loose* dependency for dinman, based on the applications type. (refer to [Application type](#applicationType) for determining the type)
+You can configure this as a *loose* dependency for dinman, based on the applications type. (refer to [Application type](#application-type) for determining the type)
 To do so, add a `dependencyConfig.json` to your `config` folder:
 
 ### `config/dependencyConfig.json`
