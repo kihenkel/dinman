@@ -25,14 +25,14 @@ Now start dinman via `npm start` or `node .\index.js` and use the available comm
 There's no generally applicable way of determining dependencies between Node.js apps. Therefore dinman looks for certain patterns. It assumes the following:
 * A `package.json` file exists and contains information about name, port and preferably entry of the application
 * The [config](https://www.npmjs.com/package/config) package is used and a `config/default.json` file is present
-* The `default.json` file contains links to other applications via `localhost:port`
+* The `default.json` file contains links to other applications via `localhost:port` or `127.0.0.1:port`
 
 While building the config, if `default.json` contains a port mapping to one of the detected apps then a dependency is concluded.
 
 ### Application type
 The config builder automatically determines an application's type. Right now the pattern is very simple:
 
-Assuming that the app name is built with dashes, it takes the very last part. Eg. `my-cool-service` will resolve to type `service`, `that-awesome-application` will resolve to type `application`.
+Assuming that the app name is built with dashes, it takes the very last part. (or to say it in regex: /([^-]+)$/) Eg. `my-cool-service` will resolve to type `service`, `that-awesome-application` will resolve to type `application`.
 
 ### Loose dependencies
 Sometimes even though there is a dependency from one application to another, you don't want it to start automatically (eg. dependency from a backend service to a frontend website).

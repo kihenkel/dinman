@@ -81,7 +81,7 @@ const registerDependenciesForConfig = (config, app) => {
       logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configKey} is not string but ${typeof configValue}`);
       return;
     }
-    const match = configValue.match(/localhost:(\d+)\//);
+    const match = configValue.match(/(?:localhost|127\.0\.0\.1):(\d+)/);
     if (!match || match.length !== 2) {
       logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configValue} doesnt contain port.`);
       return;
