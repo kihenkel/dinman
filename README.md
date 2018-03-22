@@ -9,8 +9,6 @@ Requires Node 8.7 or higher.
 ## Startup
 First you need to build a config to let dinman know about the apps and their dependencies:
 
-`npm i`
-
 `npm run buildconfig -- "C:\code\my-apps" "C:\code\my-services"`
 
 You can pass as many paths as you wish. Note that those paths have to point to the *parent directory* of your node applications. Then it'll crawl through all sub-directories.
