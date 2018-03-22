@@ -1,7 +1,11 @@
-let dependencyConfig = {};
-if (require.resolve('./../config/dependencyConfig.json')) {
-  dependencyConfig = require('./../config/dependencyConfig.json');
+let dependencyConfig;
+try {
+  require.resolve('./../dependencyConfig.json');
+  dependencyConfig = require('./../dependencyConfig.json');
+} catch (error) {
+  dependencyConfig = {};
 }
+
 const looseDependencyTypes = dependencyConfig.looseDependencyTypes || [];
 const repository = require('./repository');
 const processes = require('./processes');

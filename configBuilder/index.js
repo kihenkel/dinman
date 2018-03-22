@@ -4,7 +4,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const stripJsonComments = require('strip-json-comments');
+const defaults = require('./../src/defaults');
+const stripJsonComments = require('./strip-json-comments');
 const logger = require('./../src/logger');
 const generateJsonFromConfig = require('./generateJsonFromConfig');
 
@@ -38,6 +39,15 @@ const registerApp = (folder) => {
     logger.error(`Can't parse file ${packageJsonPath}. Error: ${error}`);
     return;
   }
+
+  const entryPath = path.join(folder, packageJson.main || defaults.PROJECT_ENTRY);
+  try {
+    fs.statSync(entryPath);
+  } catch (error) {
+    logger.error(`Can't find entry file ${entryPath}. Skipping this app ...`);
+    return;
+  }
+
   if (packageJson.name && !detectedApps.includes(packageJson.name) && packageJson.config && packageJson.config.port) {
     logger.info(`Detected app ${packageJson.name}`);
     detectedApps.push({
@@ -135,5 +145,6 @@ paths.forEach(paramPath => {
 
 detectedApps.forEach(readConfigFromFolder);
 
-fs.writeFileSync('config/config.json', generateJsonFromConfig(detectedApps), 'utf8');
-logger.info('Wrote to file config/config.json!');
+const fileToWrite = 'config.json';
+fs.writeFileSync(fileToWrite, generateJsonFromConfig(detectedApps), 'utf8');
+logger.info(`Wrote to file ${fileToWrite}!`);

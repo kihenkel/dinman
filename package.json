@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildconfig": "node configBuilder/index.js"
+    "buildconfig": "node configBuilder/index.js",
+    "start": "node ./index.js"
   },
   "author": "Kilian Henkel",
   "license": "ISC",
-  "dependencies": {
-    "strip-json-comments": "^2.0.1"
-  }
+  "dependencies": {}
 }

@@ -1,16 +1,17 @@
 const fs = require('fs');
+const path = require('path');
 const defaults = require('./src/defaults');
+const logger = require('./src/logger');
 
 module.exports = () => {
   return new Promise((resolve, reject) => {
     try {
-      require.resolve('./config/config.json');
+      require.resolve('./config.json');
     } catch (err) {
-      logger.error('Error resolving config. Did you add config/config.json?');
-      return;
+      return reject('Error resolving config. Did you run config builder?');
     }
-    const { apps, groups } = require('./config/config.json');
 
+    const { apps, groups } = require('./config.json');
     if (!apps) {
       return reject('No apps defined');
     }
@@ -34,12 +35,14 @@ module.exports = () => {
     }
 
     return Promise.all(apps.map(project => {
-      return fs.access(`${project.path}/${project.entry || defaults.PROJECT_ENTRY}`, (error) => {
-        if (error) {
-          return reject(error);
-        }
+      const entry = path.join(project.path, project.entry || defaults.PROJECT_ENTRY);
+      try {
+        fs.statSync(entry);
         return resolve();
-      });
+      } catch (error) {
+        logger.warning(`Couldn't find entry ${entry} for ${project.name}! Starting app won't work.`);
+        return resolve();
+      }
     }))
   });
 };

@@ -1,4 +1,4 @@
-const { apps } = require('./../config/config.json');
+const { apps } = require('./../config.json');
 
 const getAppNames = () =>
   apps.map(app => app.name);
