@@ -18,7 +18,14 @@ if (paths.length <= 0) {
 
 const registerApp = (folder) => {
   const packageJsonPath = path.join(folder, 'package.json');
-  const packageJsonExists = fs.statSync(packageJsonPath);
+  let packageJsonExists;
+  try {
+    packageJsonExists = fs.statSync(packageJsonPath);
+  } catch (error) {
+    logger.info(`${packageJsonPath} doesn't exist.`);
+    return;
+  }
+
   if (!packageJsonExists) {
     logger.info(`${packageJsonPath} doesn't exist.`);
     return;
@@ -89,7 +96,13 @@ const registerDependenciesForConfig = (config, app) => {
 
 const readConfigFromFolder = (app) => {
   const defaultJsonPath = path.join(app.path, 'config', 'default.json');
-  const configExists = fs.statSync(defaultJsonPath);
+  let configExists;
+  try {
+    configExists = fs.statSync(defaultJsonPath);
+  } catch (error) {
+    logger.info(`${defaultJsonPath} doesn't exist.`);
+    return;
+  }
   if (!configExists) {
     logger.info(`${defaultJsonPath} doesn't exist.`);
     return;
