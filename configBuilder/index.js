@@ -55,7 +55,7 @@ const registerApp = (folder) => {
       port: parseInt(packageJson.config.port, 10),
       path: folder,
       dependencies: [],
-      entry: packageJson.main,
+      entry: entryPath,
     });
   }
 };
@@ -138,7 +138,15 @@ const readConfigFromFolder = (app) => {
 };
 
 paths.forEach(paramPath => {
-  const allFiles = fs.readdirSync(paramPath).map(file => path.join(paramPath, file));
+  let allFiles;
+  try {
+    allFiles = fs.readdirSync(paramPath).map(file => path.join(paramPath, file));
+  } catch (error) {
+    logger.error(error);
+    logger.error(`Skipping path ${paramPath} ...`);
+    return;
+  }
+  
   const folders = allFiles.filter(file => fs.statSync(file).isDirectory());
   folders.forEach(registerApp);
 });

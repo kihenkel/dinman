@@ -35,7 +35,7 @@ module.exports = () => {
     }
 
     return Promise.all(apps.map(project => {
-      const entry = path.join(project.path, project.entry || defaults.PROJECT_ENTRY);
+      const entry = project.entry || path.join(project.path, defaults.PROJECT_ENTRY);
       try {
         fs.statSync(entry);
         return resolve();
