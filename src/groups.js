@@ -31,8 +31,18 @@ const stopGroup = (groupName) => {
   groups[groupName].forEach(appName => processes.stopApp(appName));
 };
 
+const getAppsByGroupName = (groupName) => {
+  if (!groups || !groups[groupName]) {
+    logger.info(`Group ${groupName} not found.`)
+    return;
+  }
+
+  return groups[groupName];
+};
+
 module.exports = {
   listGroups,
   startGroup,
   stopGroup,
+  getAppsByGroupName,
 };

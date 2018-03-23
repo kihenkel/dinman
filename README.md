@@ -20,6 +20,21 @@ You can pass as many paths as you wish. Note that those paths have to point to t
 The log output should give you hints if it worked as intended. In the end you should have a generated `config.json` in your `config` folder.
 Now start dinman via `npm start` or `node .\index.js` and use the available commands. (type `help`, or refer to [node-instance-manager](https://github.com/kihenkel/node-instance-manager "node-instance-manager"), the usage is identical)
 
+## Shell commands
+The node-instance-manager provides a shell with the following commands:
+- `ls` - Lists all apps from config
+- `ls-groups` - Lists all groups from config
+- `start [app]` - Starts an app
+- `restart [app]` - Restarts an app
+- `stop [app]` - Stops an app
+- `stop-all` - Stops all running apps
+- `log [app]` - Outputs the log for an app
+- `start-group [group]` - Starts a group
+- `stop-group [group]` - Stops a group
+- `cmd [app] [command]` - Executes command in app working dir (EXPERIMENTAL! Use at own risk.)
+- `cmd-all [command]` - Executes command for all apps in their working dirs (EXPERIMENTAL! Use at own risk.)
+- `cmd-group [group] [command]` - Executes command for a group in their working dirs (EXPERIMENTAL! Use at own risk.)
+
 ## Misc
 ### How it works
 There's no generally applicable way of determining dependencies between Node.js apps. Therefore dinman looks for certain patterns. It assumes the following:

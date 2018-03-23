@@ -5,10 +5,10 @@ const appNames = require('./repository').getAppNames();
 
 const commandNames = Object.keys(commands);
 const appCommands = Object.entries(commands)
-  .filter(([key, value]) => value.expects === ParamType.app)
+  .filter(([key, value]) => value.expects && value.expects.length && value.expects[0] === ParamType.app)
   .map(([key, value]) => key);
 const groupCommands = Object.entries(commands)
-  .filter(([key, value]) => value.expects === ParamType.group)
+  .filter(([key, value]) => value.expects && value.expects.length && value.expects[0] === ParamType.group)
   .map(([key, value]) => key);
 
 const prefixCompletions = (completions, prefix) =>

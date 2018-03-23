@@ -4,10 +4,12 @@ const repository = require('./repository');
 const dependencies = require('./dependencies');
 const processes = require('./processes');
 const groups = require('./groups');
+const { cmd, cmdAll, cmdGroup } = require('./cmd');
 
 const ParamType = {
   group: 'group',
   app: 'app',
+  command: 'command',
 };
 
 const log = (app) => {
@@ -59,29 +61,33 @@ const exit = () => {
 };
 
 const commands = {
-  ls: { expects: undefined, exec: ls },
-  'ls-groups': { expects: undefined, exec: lsGroups },
-  start: { expects: ParamType.app, exec: start },
-  restart: { expects: ParamType.app, exec: restart },
-  stop: { expects: ParamType.app, exec: stop },
-  'stop-all': { expects: undefined, exec: stopAll },
-  log: { expects: ParamType.app, exec: log },
-  'start-group': { expects: ParamType.group, exec: startGroup },
-  'stop-group': { expects: ParamType.group, exec: stopGroup },
-  exit: { expects: undefined, exec: exit },
-  quit: { expects: undefined, exec: exit },
+  ls: { expects: [], exec: ls },
+  'ls-groups': { expects: [], exec: lsGroups },
+  start: { expects: [ParamType.app], exec: start },
+  restart: { expects: [ParamType.app], exec: restart },
+  stop: { expects: [ParamType.app], exec: stop },
+  'stop-all': { expects: [], exec: stopAll },
+  log: { expects: [ParamType.app], exec: log },
+  'start-group': { expects: [ParamType.group], exec: startGroup },
+  'stop-group': { expects: [ParamType.group], exec: stopGroup },
+  'cmd': { expects: [ParamType.app, ParamType.command], exec: cmd },
+  'cmd-all': { expects: [ParamType.command], exec: cmdAll },
+  'cmd-group': { expects: [ParamType.group, ParamType.command], exec: cmdGroup },
+  exit: { expects: [], exec: exit },
+  quit: { expects: [], exec: exit },
 };
 
 const commandDescription = {
-  log: 'Output log for app',
-  ls: 'List all apps from config',
-  'ls-groups': 'List all groups from config',
-  start: 'Start app',
-  restart: 'Restart app',
-  stop: 'Stop app',
-  'stop-all': 'Stop all apps',
-  'start-group': 'Start group',
-  'stop-group': 'Stop group',
+  log: 'Outputs log for app',
+  ls: 'Lists all apps from config',
+  'ls-groups': 'Lists all groups from config',
+  start: 'Starts app',
+  restart: 'Restarts app',
+  stop: 'Stops app',
+  'stop-all': 'Stops all apps',
+  'start-group': 'Starts group',
+  'stop-group': 'Stops group',
+  'cmd': 'Executes command in app working directory',
 };
 
 const hiddenCommands = ['help', 'exit', 'quit'];
@@ -93,8 +99,8 @@ const help = () => {
     if (!hiddenCommands.includes(key)) {
       let line = ` ${key}`;
       const command = commands[key];
-      if (command.expects) {
-        line += ` [${command.expects}]`;
+      if (command.expects.length) {
+        line += command.expects.reduce((acc, val) => `${acc} [${val}]`, '');
       }
       for (let i = line.length; i < 32; i++) { line += ' ' }
       line += ` ${commandDescription[key] || ''}`;
