@@ -4,7 +4,9 @@
   "description": "A Node.js application that manages other Node.js applications on-demand on a dependency basis.",
   "main": "index.js",
   "scripts": {
-    "test": "eslint src/** configBuilder/*.*",
+    "lint": "eslint src/** configBuilder/*.*",
+    "test": "npm run lint && npm run mocha",
+    "mocha": "mocha",
     "buildconfig": "node configBuilder/index.js",
     "start": "node ./index.js"
   },
@@ -12,10 +14,13 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0"
+    "eslint-plugin-react": "^7.7.0",
+    "mocha": "^5.0.5",
+    "sinon": "^4.4.8"
   }
 }

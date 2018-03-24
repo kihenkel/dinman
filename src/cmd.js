@@ -53,4 +53,5 @@ module.exports = {
   cmd,
   cmdAll,
   cmdGroup,
+  sanitizeCommand,
 };
