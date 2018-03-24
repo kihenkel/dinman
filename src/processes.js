@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const childProcess = require('child_process');
 const logs = require('./logs');
 const repository = require('./repository');
 const logger = require('./logger');
@@ -24,31 +24,30 @@ const startApp = (appName) => {
     return false;
   }
 
-  const childProcess = spawn('node', [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
+  const process = childProcess.spawn('node', [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
   logger.info(`Starting ${app.name} ...`);
-  app.running = true;
 
-  childProcess.stdout.on('data', (data) => {
+  process.stdout.on('data', (data) => {
     logs.onData(app.name, data);
   });
 
-  childProcess.stderr.on('data', (data) => {
+  process.stderr.on('data', (data) => {
     logger.error(`${app.name}: ${data}`);
     if (!input) input = require('./input'); // eslint-disable-line global-require
     input.prompt();
   });
 
-  childProcess.on('error', (error) => {
+  process.on('error', (error) => {
     logger.error(error);
   });
 
-  childProcess.on('exit', () => {
+  process.on('exit', () => {
     handleOnChildProcessExit(app.name);
   });
 
-  activeProcesses[app.name] = childProcess;
+  activeProcesses[app.name] = process;
 
-  return childProcess;
+  return process;
 };
 
 const stopApp = (appName, { silentOnFail = false } = {}) => {

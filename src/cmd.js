@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const childProcess = require('child_process');
 const logger = require('./logger');
 const repository = require('./repository');
 const groups = require('./groups');
@@ -27,7 +27,7 @@ const cmd = (appName, command) => {
   }
 
   logger.info(`Executing command '${sanitizedCommand}' in working dir ${app.path}. USE AT OWN RISK!`);
-  exec(sanitizedCommand, { cwd: app.path }, (error) => {
+  childProcess.exec(sanitizedCommand, { cwd: app.path }, (error) => {
     if (error) {
       logger.error(`Error while executing command ${command} in working dir ${app.path}`);
       logger.error(error);

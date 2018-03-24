@@ -21,7 +21,7 @@ describe('commands', () => {
         run('SOME_UNKNOWN_COMMAND');
       });
 
-      it('should output correct amount of commands', () => {
+      it('should give user hint about unknown command', () => {
         expect(logger.info.calledOnce).to.be.true;
         expect(logger.info.args[0]).to.be.deep.equal(['Unknown command SOME_UNKNOWN_COMMAND']);
       });

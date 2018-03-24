@@ -17,9 +17,12 @@ const isLooseDependency = (app, dependencyApp) =>
       dependencyApp.type === looseDependencyType.to);
 
 const startAppWithDependencies = (app, appsToStart) => {
+  if (appsToStart.includes(app.name)) {
+    return;
+  }
   appsToStart.push(app.name);
   app.dependencies.forEach((dependencyAppName) => {
-    if (appsToStart.includes(dependencyAppName)) {
+    if (appsToStart.includes(dependencyAppName) || dependencyAppName === app.name) {
       return;
     }
     const dependencyApp = repository.getAppByName(dependencyAppName);
