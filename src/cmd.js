@@ -27,25 +27,24 @@ const cmd = (appName, command) => {
   }
 
   logger.info(`Executing command '${sanitizedCommand}' in working dir ${app.path}. USE AT OWN RISK!`);
-  exec(sanitizedCommand, { cwd: app.path }, (error, stdout, stderr) => {
+  exec(sanitizedCommand, { cwd: app.path }, (error) => {
     if (error) {
       logger.error(`Error while executing command ${command} in working dir ${app.path}`);
       logger.error(error);
-      return;
     }
   });
 };
 
 const cmdAll = (command) => {
   const apps = repository.getApps();
-  apps.forEach(app => {
+  apps.forEach((app) => {
     cmd(app.name, command);
   });
 };
 
 const cmdGroup = (groupName, command) => {
   const appNames = groups.getAppsByGroupName(groupName);
-  appNames.forEach(appName => {
+  appNames.forEach((appName) => {
     cmd(appName, command);
   });
 };

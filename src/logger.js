@@ -1,3 +1,5 @@
+const logLevel = 'info'; // verbose, info, warning, error
+
 const Color = {
   red: '\x1b[31m',
   yellow: '\x1b[33m',
@@ -5,36 +7,42 @@ const Color = {
   white: '\x1b[37m',
 };
 
-const _log = (msg) => {
+const log = (msg) => {
   process.stdout.write(` ${msg}\n`);
 };
 
-const _withColoredTag = (tag, color, msg) => {
-  _log(`[${color}${tag}${Color.white}] ${msg}`);
+const withColoredTag = (tag, color, msg) => {
+  log(`[${color}${tag}${Color.white}] ${msg}`);
 };
 
 const error = (msg) => {
-  _withColoredTag('ERROR', Color.red, msg);
+  withColoredTag('ERROR', Color.red, msg);
 };
 
 const warning = (msg) => {
-  _withColoredTag('Warning', Color.yellow, msg);
+  if (['verbose', 'info', 'warning'].includes(logLevel)) {
+    withColoredTag('Warning', Color.yellow, msg);
+  }
 };
 
 const info = (msg) => {
-  _log(msg);
+  if (['verbose', 'info'].includes(logLevel)) {
+    log(msg);
+  }
 };
 
 const verbose = (msg) => {
-  //_log(msg);
+  if (['verbose'].includes(logLevel)) {
+    log(msg);
+  }
 };
 
 const positive = (tag, msg) => {
-  _withColoredTag(tag, Color.green, msg);
+  withColoredTag(tag, Color.green, msg);
 };
 
 const negative = (tag, msg) => {
-  _withColoredTag(tag, Color.red, msg);
+  withColoredTag(tag, Color.red, msg);
 };
 
 const clearConsole = () => {
@@ -43,7 +51,7 @@ const clearConsole = () => {
 
 const newLine = () => {
   process.stdout.write('\n');
-}
+};
 
 module.exports = {
   error,

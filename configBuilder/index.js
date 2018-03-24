@@ -11,12 +11,6 @@ const generateJsonFromConfig = require('./generateJsonFromConfig');
 
 const detectedApps = [];
 
-const paths = process.argv.slice(2);
-if (paths.length <= 0) {
-  logger.error('No paths provided, configBuilder needs paths. Check configBuilder.js how to provide them.')
-  return process.exit(0);
-}
-
 const registerApp = (folder) => {
   const packageJsonPath = path.join(folder, 'package.json');
   let packageJsonExists;
@@ -48,7 +42,12 @@ const registerApp = (folder) => {
     return;
   }
 
-  if (packageJson.name && !detectedApps.includes(packageJson.name) && packageJson.config && packageJson.config.port) {
+  if (!packageJson.config || !packageJson.config.port) {
+    logger.info(`${packageJsonPath} does not have config and config.port property. Skipping this app ...`);
+    return;
+  }
+
+  if (packageJson.name && !detectedApps.includes(packageJson.name)) {
     logger.info(`Detected app ${packageJson.name}`);
     detectedApps.push({
       name: packageJson.name,
@@ -60,14 +59,10 @@ const registerApp = (folder) => {
   }
 };
 
-const lookupAppForPort = (port) => {
-  return detectedApps.find(app => app.port === port);
-};
+const lookupAppForPort = port => detectedApps.find(app => app.port === port);
 
-const hasCircularDependency = (appA, appB) => {
-  return appA.dependencies.includes(appB) || 
+const hasCircularDependency = (appA, appB) => appA.dependencies.includes(appB) ||
     appB.dependencies.includes(appA);
-};
 
 const registerDependenciesForConfig = (config, app) => {
   if (!config) {
@@ -75,7 +70,7 @@ const registerDependenciesForConfig = (config, app) => {
     return;
   }
   const configKeys = Object.keys(config);
-  configKeys.forEach(configKey => {
+  configKeys.forEach((configKey) => {
     const configValue = config[configKey];
     if (typeof configValue !== 'string') {
       logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configKey} is not string but ${typeof configValue}`);
@@ -86,7 +81,7 @@ const registerDependenciesForConfig = (config, app) => {
       logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configValue} doesnt contain port.`);
       return;
     }
-    const port = parseInt(match[1], 10)
+    const port = parseInt(match[1], 10);
     const lookupApp = lookupAppForPort(port);
     if (!lookupApp) {
       logger.verbose(`Skipping ${configKey} for app ${app.name} because couldnt find app for port ${port}.`);
@@ -137,22 +132,28 @@ const readConfigFromFolder = (app) => {
   registerDependenciesForConfig(config, app);
 };
 
-paths.forEach(paramPath => {
-  let allFiles;
-  try {
-    allFiles = fs.readdirSync(paramPath).map(file => path.join(paramPath, file));
-  } catch (error) {
-    logger.error(error);
-    logger.error(`Skipping path ${paramPath} ...`);
-    return;
-  }
-  
-  const folders = allFiles.filter(file => fs.statSync(file).isDirectory());
-  folders.forEach(registerApp);
-});
+const paths = process.argv.slice(2);
+if (paths.length <= 0) {
+  logger.error('No paths provided, configBuilder needs paths. Check configBuilder.js how to provide them.');
+  process.exit(0);
+} else {
+  paths.forEach((paramPath) => {
+    let allFiles;
+    try {
+      allFiles = fs.readdirSync(paramPath).map(file => path.join(paramPath, file));
+    } catch (error) {
+      logger.error(error);
+      logger.error(`Skipping path ${paramPath} ...`);
+      return;
+    }
 
-detectedApps.forEach(readConfigFromFolder);
+    const folders = allFiles.filter(file => fs.statSync(file).isDirectory());
+    folders.forEach(registerApp);
+  });
 
-const fileToWrite = 'config.json';
-fs.writeFileSync(fileToWrite, generateJsonFromConfig(detectedApps), 'utf8');
-logger.info(`Wrote to file ${fileToWrite}!`);
+  detectedApps.forEach(readConfigFromFolder);
+
+  const fileToWrite = 'config.json';
+  fs.writeFileSync(fileToWrite, generateJsonFromConfig(detectedApps), 'utf8');
+  logger.info(`Wrote to file ${fileToWrite}!`);
+}

@@ -2,7 +2,7 @@ const readline = require('readline');
 const completer = require('./completer');
 const commands = require('./commands');
 
-const argumentMatch = /("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g;
+const argumentMatch = /("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^/\\]*(?:\\[\S\s][^/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g;
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -17,12 +17,12 @@ const prompt = () => {
 const listen = () => {
   rl.on('line', async (input) => {
     if (input) {
-      [command, ...args] = input.match(argumentMatch);
+      const [command, ...args] = input.match(argumentMatch);
       await commands.run(command, ...args);
     }
     prompt();
   });
-  
+
   prompt();
 };
 

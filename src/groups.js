@@ -8,14 +8,14 @@ const listGroups = () => {
     return;
   }
 
-  Object.keys(groups).forEach(group => {
-    console.log(` ${group}`);
+  Object.keys(groups).forEach((group) => {
+    logger.info(` ${group}`);
   });
 };
 
 const startGroup = (groupName) => {
   if (!groups || !groups[groupName]) {
-    logger.info(`Group ${groupName} not found.`)
+    logger.info(`Group ${groupName} not found.`);
     return;
   }
 
@@ -24,7 +24,7 @@ const startGroup = (groupName) => {
 
 const stopGroup = (groupName) => {
   if (!groups || !groups[groupName]) {
-    logger.info(`Group ${groupName} not found.`)
+    logger.info(`Group ${groupName} not found.`);
     return;
   }
 
@@ -33,8 +33,8 @@ const stopGroup = (groupName) => {
 
 const getAppsByGroupName = (groupName) => {
   if (!groups || !groups[groupName]) {
-    logger.info(`Group ${groupName} not found.`)
-    return;
+    logger.info(`Group ${groupName} not found.`);
+    return undefined;
   }
 
   return groups[groupName];

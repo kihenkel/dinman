@@ -7,10 +7,10 @@ const defaults = require('./defaults');
 const activeProcesses = {};
 let input;
 
-const _handleOnChildProcessExit = (appName) => {
+const handleOnChildProcessExit = (appName) => {
   delete activeProcesses[appName];
   logs.onAppExit(appName);
-}
+};
 
 const startApp = (appName) => {
   const app = repository.getAppByName(appName);
@@ -24,7 +24,7 @@ const startApp = (appName) => {
     return false;
   }
 
-  const childProcess = spawn(`node`, [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
+  const childProcess = spawn('node', [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
   logger.info(`Starting ${app.name} ...`);
   app.running = true;
 
@@ -34,7 +34,7 @@ const startApp = (appName) => {
 
   childProcess.stderr.on('data', (data) => {
     logger.error(`${app.name}: ${data}`);
-    if (!input) input = require('./input');
+    if (!input) input = require('./input'); // eslint-disable-line global-require
     input.prompt();
   });
 
@@ -43,7 +43,7 @@ const startApp = (appName) => {
   });
 
   childProcess.on('exit', () => {
-    _handleOnChildProcessExit(app.name);
+    handleOnChildProcessExit(app.name);
   });
 
   activeProcesses[app.name] = childProcess;
@@ -70,38 +70,38 @@ const stopApp = (appName, { silentOnFail = false } = {}) => {
 };
 
 const stopAll = () => {
-  logger.info(`Stopping all apps ...`);
-  Object.keys(activeProcesses).forEach(key => {
+  logger.info('Stopping all apps ...');
+  Object.keys(activeProcesses).forEach((key) => {
     stopApp(key, { silent: true });
-  })
-};
-
-const restartApp = (appName) => {
-  return new Promise((resolve, reject) => {
-    const app = repository.getAppByName(appName);
-    if (!app) {
-      logger.info(`App ${appName} not found.`);
-      return resolve();
-    }
-
-    if (!activeProcesses[app.name]) {
-      logger.info(`App ${app.name} is not running.`);
-      return resolve();
-    }
-
-    logger.info(`Restarting ${app.name} ...`);
-
-    activeProcesses[app.name].on('exit', () => {
-      _handleOnChildProcessExit(app.name);
-      startApp(appName);
-      resolve();
-    });
-
-    stopApp(appName);
   });
 };
 
-const isAppRunning = (appName) => !!activeProcesses[appName];
+const restartApp = appName => new Promise((resolve) => {
+  const app = repository.getAppByName(appName);
+  if (!app) {
+    logger.info(`App ${appName} not found.`);
+    resolve();
+    return;
+  }
+
+  if (!activeProcesses[app.name]) {
+    logger.info(`App ${app.name} is not running.`);
+    resolve();
+    return;
+  }
+
+  logger.info(`Restarting ${app.name} ...`);
+
+  activeProcesses[app.name].on('exit', () => {
+    handleOnChildProcessExit(app.name);
+    startApp(appName);
+    resolve();
+  });
+
+  stopApp(appName);
+});
+
+const isAppRunning = appName => !!activeProcesses[appName];
 
 module.exports = {
   startApp,

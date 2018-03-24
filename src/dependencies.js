@@ -1,7 +1,7 @@
 let dependencyConfig;
 try {
   require.resolve('./../dependencyConfig.json');
-  dependencyConfig = require('./../dependencyConfig.json');
+  dependencyConfig = require('./../dependencyConfig.json'); // eslint-disable-line global-require
 } catch (error) {
   dependencyConfig = {};
 }
@@ -13,13 +13,12 @@ const logger = require('./logger');
 
 const isLooseDependency = (app, dependencyApp) =>
   looseDependencyTypes.some(looseDependencyType =>
-    app.type === looseDependencyType.from && 
-      dependencyApp.type === looseDependencyType.to
-  );
+    app.type === looseDependencyType.from &&
+      dependencyApp.type === looseDependencyType.to);
 
-const _startAppWithDependencies = (app, appsToStart) => {
+const startAppWithDependencies = (app, appsToStart) => {
   appsToStart.push(app.name);
-  app.dependencies.forEach(dependencyAppName => {
+  app.dependencies.forEach((dependencyAppName) => {
     if (appsToStart.includes(dependencyAppName)) {
       return;
     }
@@ -27,7 +26,7 @@ const _startAppWithDependencies = (app, appsToStart) => {
     if (isLooseDependency(app, dependencyApp)) {
       return;
     }
-    _startAppWithDependencies(dependencyApp, appsToStart);
+    startAppWithDependencies(dependencyApp, appsToStart);
   });
   processes.startApp(app.name);
 };
@@ -40,8 +39,8 @@ const startApp = (appName) => {
     return;
   }
 
-  _startAppWithDependencies(app, []);
-}
+  startAppWithDependencies(app, []);
+};
 
 module.exports = {
   startApp,

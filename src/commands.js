@@ -17,9 +17,12 @@ const log = (app) => {
 };
 
 const ls = () => {
-  repository.getAppNames().sort().forEach(appName => {
-    processes.isAppRunning(appName) ? 
-      logger.positive('Running', appName) : logger.negative('Stopped', appName);
+  repository.getAppNames().sort().forEach((appName) => {
+    if (processes.isAppRunning(appName)) {
+      logger.positive('Running', appName);
+    } else {
+      logger.negative('Stopped', appName);
+    }
   });
 };
 
@@ -70,7 +73,7 @@ const commands = {
   log: { expects: [ParamType.app], exec: log },
   'start-group': { expects: [ParamType.group], exec: startGroup },
   'stop-group': { expects: [ParamType.group], exec: stopGroup },
-  'cmd': { expects: [ParamType.app, ParamType.command], exec: cmd },
+  cmd: { expects: [ParamType.app, ParamType.command], exec: cmd },
   'cmd-all': { expects: [ParamType.command], exec: cmdAll },
   'cmd-group': { expects: [ParamType.group, ParamType.command], exec: cmdGroup },
   exit: { expects: [], exec: exit },
@@ -87,22 +90,22 @@ const commandDescription = {
   'stop-all': 'Stops all apps',
   'start-group': 'Starts group',
   'stop-group': 'Stops group',
-  'cmd': 'Executes command in app working directory',
+  cmd: 'Executes command in app working directory',
 };
 
 const hiddenCommands = ['help', 'exit', 'quit'];
 
 const help = () => {
   logger.newLine();
-  logger.info(`The following commands are available:`);
-  Object.keys(commands).forEach(key => {
+  logger.info('The following commands are available:');
+  Object.keys(commands).forEach((key) => {
     if (!hiddenCommands.includes(key)) {
       let line = ` ${key}`;
       const command = commands[key];
       if (command.expects.length) {
         line += command.expects.reduce((acc, val) => `${acc} [${val}]`, '');
       }
-      for (let i = line.length; i < 32; i++) { line += ' ' }
+      for (let i = line.length; i < 32; i += 1) { line += ' '; }
       line += ` ${commandDescription[key] || ''}`;
 
       logger.info(line);
@@ -110,7 +113,7 @@ const help = () => {
   });
 };
 
-commands['help'] = { expects: undefined, exec: help };
+commands.help = { expects: undefined, exec: help };
 
 module.exports = {
   run: async (command, ...args) => {
@@ -118,7 +121,7 @@ module.exports = {
       await commands[command].exec(...args);
       return true;
     }
-    console.log(`Unknown command ${command}`);
+    logger.info(`Unknown command ${command}`);
     return false;
   },
   commands,
