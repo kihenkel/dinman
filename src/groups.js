@@ -1,10 +1,12 @@
-const { groups } = require('./../config.json');
+const config = require('./config');
 const logger = require('./logger');
 const processes = require('./processes');
 
+const { groups } = config;
+
 const listGroups = () => {
   if (!groups) {
-    logger.info('No groups found');
+    logger.info('No groups found.');
     return;
   }
 
@@ -34,10 +36,10 @@ const stopGroup = (groupName) => {
 const getAppsByGroupName = (groupName) => {
   if (!groups || !groups[groupName]) {
     logger.info(`Group ${groupName} not found.`);
-    return undefined;
+    return [];
   }
 
-  return groups[groupName];
+  return groups[groupName] || [];
 };
 
 module.exports = {

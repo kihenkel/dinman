@@ -1,7 +1,7 @@
 const { commands, ParamType } = require('./commands');
-const groups = require('./../config.json').groups || {}; // eslint-disable-line global-require
+const config = require('./config');
 
-const groupNames = Object.keys(groups);
+const groupNames = Object.keys(config.groups || {});
 const appNames = require('./repository').getAppNames();
 
 const commandNames = Object.keys(commands);

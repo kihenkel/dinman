@@ -54,7 +54,6 @@ const stopApp = (appName, { silentOnFail = false } = {}) => {
   const app = repository.getAppByName(appName);
   if (!app) {
     if (!silentOnFail) logger.info(`App ${appName} not found.`);
-    logger.info(`App ${appName} not found.`);
     return false;
   }
 

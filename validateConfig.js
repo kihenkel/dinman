@@ -8,7 +8,9 @@ module.exports = () => {
     try {
       require.resolve('./config.json');
     } catch (err) {
-      return reject('Error resolving config. Did you run config builder?');
+      logger.error('Error resolving config. Did you run config builder?');
+      logger.error('=> npm run buildconfig -- "/some/path/to/apps" "/some/other/path/to/apps"');
+      return resolve();
     }
 
     const { apps, groups } = require('./config.json');

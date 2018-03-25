@@ -1,12 +1,6 @@
-let dependencyConfig;
-try {
-  require.resolve('./../dependencyConfig.json');
-  dependencyConfig = require('./../dependencyConfig.json'); // eslint-disable-line global-require
-} catch (error) {
-  dependencyConfig = {};
-}
+const config = require('./config');
 
-const looseDependencyTypes = dependencyConfig.looseDependencyTypes || [];
+const looseDependencyTypes = config.looseDependencyTypes || [];
 const repository = require('./repository');
 const processes = require('./processes');
 const logger = require('./logger');

@@ -36,14 +36,34 @@ const cmd = (appName, command) => {
 };
 
 const cmdAll = (command) => {
+  if (!command) {
+    logger.info('Please provide command.');
+    return;
+  }
+
   const apps = repository.getApps();
+  if (!apps.length) {
+    logger.info('No apps found. Command not executed.');
+    return;
+  }
+
   apps.forEach((app) => {
     cmd(app.name, command);
   });
 };
 
 const cmdGroup = (groupName, command) => {
+  if (!groupName || !command) {
+    logger.info('Please provide group and command.');
+    return;
+  }
+
   const appNames = groups.getAppsByGroupName(groupName);
+  if (!appNames.length) {
+    logger.info(`No apps found for group ${groupName}. Command not executed.`);
+    return;
+  }
+
   appNames.forEach((appName) => {
     cmd(appName, command);
   });

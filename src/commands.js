@@ -17,7 +17,13 @@ const log = (app) => {
 };
 
 const ls = () => {
-  repository.getAppNames().sort().forEach((appName) => {
+  const appNames = repository.getAppNames();
+  if (!appNames.length) {
+    logger.info('No apps registered.');
+    return;
+  }
+
+  appNames.sort().forEach((appName) => {
     if (processes.isAppRunning(appName)) {
       logger.positive('Running', appName);
     } else {
@@ -121,7 +127,7 @@ module.exports = {
       await commands[command].exec(...args);
       return true;
     }
-    logger.info(`Unknown command ${command}`);
+    logger.info(`Unknown command ${command}.`);
     return false;
   },
   commands,
