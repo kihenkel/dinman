@@ -13,9 +13,13 @@ module.exports = () => {
       return resolve();
     }
 
-    const { apps, groups } = require('./config.json');
-    if (!apps) {
-      return reject('No apps defined');
+    const config = require('./config.json');
+    const apps = config.apps;
+    const groups = config.groups;
+
+    if (!apps || !apps.length) {
+      logger.error('No apps defined in config!');
+      return resolve();
     }
 
     apps.forEach(project => {
