@@ -42,16 +42,16 @@ const registerApp = (folder) => {
     return;
   }
 
-  if (!packageJson.config || !packageJson.config.port) {
-    logger.info(`${packageJsonPath} does not have config and config.port property. Skipping this app ...`);
-    return;
+  const port = packageJson.config && parseInt(packageJson.config.port, 10);
+  if (!port) {
+    logger.info(`Couldn't find port in ${packageJsonPath}. Dependencies unavailable for this app!`);
   }
 
   if (packageJson.name && !detectedApps.includes(packageJson.name)) {
     logger.info(`Detected app ${packageJson.name}`);
     detectedApps.push({
       name: packageJson.name,
-      port: parseInt(packageJson.config.port, 10),
+      port,
       path: folder,
       dependencies: [],
       entry: entryPath,
