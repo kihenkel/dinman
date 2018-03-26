@@ -97,6 +97,8 @@ const commandDescription = {
   'start-group': 'Starts group',
   'stop-group': 'Stops group',
   cmd: 'Executes command in app working directory',
+  'cmd-all': 'Executes command in working directories of all apps',
+  'cmd-group': 'Executes command in working directories of group',
 };
 
 const hiddenCommands = ['help', 'exit', 'quit'];
