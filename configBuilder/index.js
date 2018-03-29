@@ -7,6 +7,8 @@ const path = require('path');
 const defaults = require('./../src/defaults');
 const stripJsonComments = require('./strip-json-comments');
 const logger = require('./../src/logger');
+const registerDependenciesForConfig = require('./registerDependenciesForConfig');
+const extractEntryFromStartScript = require('./extractEntryFromStartScript');
 const generateJsonFromConfig = require('./generateJsonFromConfig');
 
 const detectedApps = [];
@@ -34,7 +36,11 @@ const registerApp = (folder) => {
     return;
   }
 
-  const entryPath = path.join(folder, packageJson.main || defaults.PROJECT_ENTRY);
+  const entry = packageJson.main || 
+    extractEntryFromStartScript(packageJson.scripts) ||
+    defaults.PROJECT_ENTRY;
+
+  const entryPath = path.join(folder, entry);
   try {
     fs.statSync(entryPath);
   } catch (error) {
@@ -48,7 +54,7 @@ const registerApp = (folder) => {
   }
 
   if (packageJson.name && !detectedApps.includes(packageJson.name)) {
-    logger.info(`Detected app ${packageJson.name}`);
+    logger.info(`Detected app ${packageJson.name} with port ${port}`);
     detectedApps.push({
       name: packageJson.name,
       port,
@@ -57,46 +63,6 @@ const registerApp = (folder) => {
       entry: entryPath,
     });
   }
-};
-
-const lookupAppForPort = port => detectedApps.find(app => app.port === port);
-
-const hasCircularDependency = (appA, appB) => appA.dependencies.includes(appB) ||
-    appB.dependencies.includes(appA);
-
-const registerDependenciesForConfig = (config, app) => {
-  if (!config) {
-    logger.verbose(`Skipping config for app ${app.name} because config doesnt exist`);
-    return;
-  }
-  const configKeys = Object.keys(config);
-  configKeys.forEach((configKey) => {
-    const configValue = config[configKey];
-    if (typeof configValue !== 'string') {
-      logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configKey} is not string but ${typeof configValue}`);
-      return;
-    }
-    const match = configValue.match(/(?:localhost|127\.0\.0\.1):(\d+)/);
-    if (!match || match.length !== 2) {
-      logger.verbose(`Skipping ${configKey} for app ${app.name} because ${configValue} doesnt contain port.`);
-      return;
-    }
-    const port = parseInt(match[1], 10);
-    const lookupApp = lookupAppForPort(port);
-    if (!lookupApp) {
-      logger.verbose(`Skipping ${configKey} for app ${app.name} because couldnt find app for port ${port}.`);
-      return;
-    }
-
-    if (hasCircularDependency(app, lookupApp)) {
-      logger.warning(`Circular dependency found for app ${app.name} and ${lookupApp.name}!`);
-    }
-
-    if (!app.dependencies.includes(lookupApp)) {
-      logger.info(`${app.name}: Adding ${lookupApp.name} as dependency.`);
-      app.dependencies.push(lookupApp);
-    }
-  });
 };
 
 const readConfigFromFolder = (app) => {
@@ -128,8 +94,7 @@ const readConfigFromFolder = (app) => {
     return;
   }
 
-  registerDependenciesForConfig(config.api, app);
-  registerDependenciesForConfig(config, app);
+  registerDependenciesForConfig(config, app, detectedApps);
 };
 
 const paths = process.argv.slice(2);
@@ -155,5 +120,8 @@ if (paths.length <= 0) {
 
   const fileToWrite = 'config.json';
   fs.writeFileSync(fileToWrite, generateJsonFromConfig(detectedApps), 'utf8');
-  logger.info(`Wrote to file ${fileToWrite}!`);
+
+  logger.newLine();
+  logger.info('===================================');
+  logger.info(`Done! Wrote to file ${fileToWrite}!`);
 }
