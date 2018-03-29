@@ -36,7 +36,7 @@ const registerApp = (folder) => {
     return;
   }
 
-  const entry = packageJson.main || 
+  const entry = packageJson.main ||
     extractEntryFromStartScript(packageJson.scripts) ||
     defaults.PROJECT_ENTRY;
 
