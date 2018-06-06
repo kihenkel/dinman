@@ -9,7 +9,7 @@ const flattenObject = (obj, flattened) => {
   const values = Object.values(obj);
 
   return values.reduce((acc, val) => {
-    if (typeof val === 'object') {
+    if (val && typeof val === 'object') {
       return flattenObject(val, acc);
     }
     return acc.concat(val);
