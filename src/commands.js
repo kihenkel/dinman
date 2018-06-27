@@ -90,7 +90,7 @@ const commands = {
   'ls-groups': { expects: [], exec: lsGroups },
   start: { expects: [ParamType.app], exec: start },
   'start-excluded': { expects: [ParamType.app], exec: startExcluded },
-  'start-all': { expects: [ParamType.app], exec: startExcluded },
+  'start-all': { expects: [], exec: startAll },
   restart: { expects: [ParamType.app], exec: restart },
   stop: { expects: [ParamType.app], exec: stop },
   'stop-all': { expects: [], exec: stopAll },
