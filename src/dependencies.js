@@ -39,6 +39,28 @@ const startApp = (appName) => {
   startAppWithDependencies(app, []);
 };
 
+const startAppExcluded = (appName) => {
+  const app = repository.getAppByName(appName);
+
+  if (!app) {
+    logger.info(`App ${appName} not found.`);
+    return;
+  }
+
+  const appsToStart = [];
+  app.dependencies.forEach((dependencyAppName) => {
+    if (dependencyAppName === app.name) {
+      return;
+    }
+    const dependencyApp = repository.getAppByName(dependencyAppName);
+    if (isLooseDependency(app, dependencyApp)) {
+      return;
+    }
+    startAppWithDependencies(dependencyApp, appsToStart);
+  });
+}
+
 module.exports = {
   startApp,
+  startAppExcluded,
 };

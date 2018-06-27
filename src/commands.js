@@ -36,8 +36,24 @@ const lsGroups = () => {
   groups.listGroups();
 };
 
-const start = async (appName) => {
+const start = (appName) => {
   dependencies.startApp(appName);
+};
+
+const startExcluded = (appName) => {
+  dependencies.startAppExcluded(appName);
+};
+
+const startAll = () => {
+  const appNames = repository.getAppNames();
+  if (!appNames.length) {
+    logger.info('No apps registered.');
+    return;
+  }
+
+  appNames.forEach((appName) => {
+    processes.startApp(appName);
+  });
 };
 
 const restart = async (appName) => {
@@ -73,6 +89,8 @@ const commands = {
   ls: { expects: [], exec: ls },
   'ls-groups': { expects: [], exec: lsGroups },
   start: { expects: [ParamType.app], exec: start },
+  'start-excluded': { expects: [ParamType.app], exec: startExcluded },
+  'start-all': { expects: [ParamType.app], exec: startExcluded },
   restart: { expects: [ParamType.app], exec: restart },
   stop: { expects: [ParamType.app], exec: stop },
   'stop-all': { expects: [], exec: stopAll },
@@ -90,7 +108,9 @@ const commandDescription = {
   log: 'Outputs log for app',
   ls: 'Lists all apps from config',
   'ls-groups': 'Lists all groups from config',
-  start: 'Starts app',
+  start: 'Starts app with dependencies',
+  'start-excluded': 'Starts apps dependencies but not app itself',
+  'start-all': 'Starts all apps',
   restart: 'Restarts app',
   stop: 'Stops app',
   'stop-all': 'Stops all apps',
