@@ -26,6 +26,7 @@ The node-instance-manager provides a shell with the following commands:
 - `ls-groups` - Lists all groups from config
 - `start [app]` - Starts an app with dependencies
 - `start-excluded [app]` - Starts apps dependencies but not app itself
+- `start-only [app]` - Starts app only (without dependencies)
 - `start-all` - Starts all apps from config
 - `restart [app]` - Restarts an app
 - `stop [app]` - Stops an app
