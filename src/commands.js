@@ -44,6 +44,10 @@ const startExcluded = (appName) => {
   dependencies.startAppExcluded(appName);
 };
 
+const startOnly = (appName) => {
+  processes.startApp(appName);
+};
+
 const startAll = () => {
   const appNames = repository.getAppNames();
   if (!appNames.length) {
@@ -90,6 +94,7 @@ const commands = {
   'ls-groups': { expects: [], exec: lsGroups },
   start: { expects: [ParamType.app], exec: start },
   'start-excluded': { expects: [ParamType.app], exec: startExcluded },
+  'start-only': { expects: [ParamType.app], exec: startOnly },
   'start-all': { expects: [], exec: startAll },
   restart: { expects: [ParamType.app], exec: restart },
   stop: { expects: [ParamType.app], exec: stop },
@@ -110,6 +115,7 @@ const commandDescription = {
   'ls-groups': 'Lists all groups from config',
   start: 'Starts app with dependencies',
   'start-excluded': 'Starts apps dependencies but not app itself',
+  'start-only': 'Starts app only (without dependencies)',
   'start-all': 'Starts all apps',
   restart: 'Restarts app',
   stop: 'Stops app',

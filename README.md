@@ -24,8 +24,8 @@ Now start dinman via `npm start` or `node .\index.js` and use the available comm
 The node-instance-manager provides a shell with the following commands:
 - `ls` - Lists all apps from config
 - `ls-groups` - Lists all groups from config
-- `start [app]` - Starts an app
-- `start-excluded [app]` - Starts an app with dependencies
+- `start [app]` - Starts an app with dependencies
+- `start-excluded [app]` - Starts apps dependencies but not app itself
 - `start-all` - Starts all apps from config
 - `restart [app]` - Restarts an app
 - `stop [app]` - Stops an app
@@ -54,15 +54,16 @@ Assuming that the app name is built with dashes, it takes the very last part. (o
 ### Loose dependencies
 Sometimes even though there is a dependency from one application to another, you don't want it to start automatically (eg. dependency from a backend service to a frontend website).
 You can configure this as a *loose* dependency for dinman, based on the applications type. (refer to [Application type](#application-type) for determining the type)
-To do so, add a `dependencyConfig.json` to your `config` folder:
+To do so, add a `dependencyConfig.json` to your root folder:
 
-#### `config/dependencyConfig.json`
+#### `dependencyConfig.json`
 ```javascript
 {
   "looseDependencyTypes": [
-    { "from": "service", "to": "app" }
+    { "from": "service", "to": "app" },
+    { "from": "app", "to": "app" }
   ]
 }
 ```
 
-This configures the type `app` to be a *loose* dependency to `service`. If now a service has a dependency to an app, the app will not start automatically.
+This configures eg. the type `app` to be a *loose* dependency to `service`. If now a service has a dependency to an app, the app will not start automatically.
