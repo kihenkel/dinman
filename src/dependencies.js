@@ -47,7 +47,7 @@ const startAppExcluded = (appName) => {
     return;
   }
 
-  const appsToStart = [];
+  const appsToStart = [app.name];
   app.dependencies.forEach((dependencyAppName) => {
     if (dependencyAppName === app.name) {
       return;
