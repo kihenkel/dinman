@@ -85,6 +85,7 @@ const restartApp = appName => new Promise((resolve) => {
 
   if (!activeProcesses[app.name]) {
     logger.info(`App ${app.name} is not running.`);
+    startApp(appName);
     resolve();
     return;
   }
