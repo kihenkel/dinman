@@ -17,8 +17,8 @@ First you need to build a config to let dinman know about the apps and their dep
 
 You can pass as many paths as you wish. Note that those paths have to point to the *parent directory* of your Node applications. Then it'll crawl through all sub-directories.
 
-The log output should give you hints if it worked as intended. In the end you should have a generated `config.json` in your `config` folder.
-Now start dinman via `npm start` or `node .\index.js` and use the available commands. (type `help`, or refer to [node-instance-manager](https://github.com/kihenkel/node-instance-manager "node-instance-manager"), the usage is identical)
+The log output should give you hints if it worked as intended. In the end you should have a generated `config.json` in your root folder.
+Now start dinman via `npm start` or `node .\index.js` and use the available commands. (type `help`)
 
 ## Shell commands
 The node-instance-manager provides a shell with the following commands:
@@ -50,7 +50,7 @@ While building the config, if `default.json` contains a port mapping to one of t
 ### Application type
 The config builder automatically determines an application's type. Right now the pattern is very simple:
 
-Assuming that the app name is built with dashes, it takes the very last part. (or to say it in regex: /([^-]+)$/) Eg. `my-cool-service` will resolve to type `service`, `that-awesome-application` will resolve to type `application`.
+Assuming that the app name is built with dashes, it takes the very last part. (or to say it in regex: `/([^-]+)$/`) Eg. `my-cool-service` will resolve to type `service`, `that-awesome-application` will resolve to type `application`.
 
 ### Loose dependencies
 Sometimes even though there is a dependency from one application to another, you don't want it to start automatically (eg. dependency from a backend service to a frontend website).
