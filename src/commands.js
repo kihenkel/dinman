@@ -84,6 +84,10 @@ const stopGroup = (groupName) => {
   groups.stopGroup(groupName);
 };
 
+const clear = () => {
+  logger.clearConsole();
+};
+
 const exit = () => {
   logger.info('Bye!');
   process.exit(0);
@@ -105,6 +109,8 @@ const commands = {
   cmd: { expects: [ParamType.app, ParamType.command], exec: cmd },
   'cmd-all': { expects: [ParamType.command], exec: cmdAll },
   'cmd-group': { expects: [ParamType.group, ParamType.command], exec: cmdGroup },
+  clear: { expects: [], exec: clear },
+  cls: { expects: [], exec: clear },
   exit: { expects: [], exec: exit },
   quit: { expects: [], exec: exit },
 };
@@ -127,7 +133,7 @@ const commandDescription = {
   'cmd-group': 'Executes command in working directories of group',
 };
 
-const hiddenCommands = ['help', 'exit', 'quit'];
+const hiddenCommands = ['help', 'exit', 'quit', 'cls', 'clear'];
 
 const help = () => {
   logger.newLine();
