@@ -10,7 +10,13 @@ describe('completer', () => {
     });
 
     it('should return start commands as suggestion', () => {
-      expect(result).to.deep.equal([['start', 'start-group'], 'sta']);
+      expect(result).to.deep.equal([[
+        'start',
+        'start-excluded',
+        'start-only',
+        'start-all',
+        'start-group',
+      ], 'sta']);
     });
   });
 

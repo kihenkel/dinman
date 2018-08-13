@@ -58,7 +58,7 @@ const startAppExcluded = (appName) => {
     }
     startAppWithDependencies(dependencyApp, appsToStart);
   });
-}
+};
 
 module.exports = {
   startApp,
