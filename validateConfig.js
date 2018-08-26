@@ -15,7 +15,6 @@ module.exports = () => {
 
     const config = require('./config.json');
     const apps = config.apps;
-    const groups = config.groups;
 
     if (!apps || !apps.length) {
       logger.error('No apps defined in config!');
@@ -31,14 +30,6 @@ module.exports = () => {
         return reject('Not all apps have a path');
       }
     });
-
-    if (groups) {
-      Object.entries(groups).forEach(([key, value]) => {
-        if (!Array.isArray(value)) {
-          return reject(`Group ${key} is not an array`);
-        }
-      });
-    }
 
     return Promise.all(apps.map(project => {
       const entry = project.entry || path.join(project.path, defaults.PROJECT_ENTRY);

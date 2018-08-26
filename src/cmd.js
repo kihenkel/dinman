@@ -1,7 +1,6 @@
 const childProcess = require('child_process');
 const logger = require('./logger');
 const repository = require('./repository');
-const groups = require('./groups');
 
 const sanitizeCommand = (command) => {
   let sanitizedCommand = command;
@@ -52,26 +51,8 @@ const cmdAll = (command) => {
   });
 };
 
-const cmdGroup = (groupName, command) => {
-  if (!groupName || !command) {
-    logger.info('Please provide group and command.');
-    return;
-  }
-
-  const appNames = groups.getAppsByGroupName(groupName);
-  if (!appNames.length) {
-    logger.info(`No apps found for group ${groupName}. Command not executed.`);
-    return;
-  }
-
-  appNames.forEach((appName) => {
-    cmd(appName, command);
-  });
-};
-
 module.exports = {
   cmd,
   cmdAll,
-  cmdGroup,
   sanitizeCommand,
 };

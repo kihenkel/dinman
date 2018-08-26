@@ -3,12 +3,10 @@ const logs = require('./logs');
 const repository = require('./repository');
 const dependencies = require('./dependencies');
 const processes = require('./processes');
-const groups = require('./groups');
 const rebuild = require('./rebuild');
-const { cmd, cmdAll, cmdGroup } = require('./cmd');
+const { cmd, cmdAll } = require('./cmd');
 
 const ParamType = {
-  group: 'group',
   app: 'app',
   command: 'command',
 };
@@ -31,10 +29,6 @@ const ls = () => {
       logger.negative('Stopped', appName);
     }
   });
-};
-
-const lsGroups = () => {
-  groups.listGroups();
 };
 
 const start = (appName) => {
@@ -77,14 +71,6 @@ const stopAll = () => {
   processes.stopAll();
 };
 
-const startGroup = (groupName) => {
-  groups.startGroup(groupName);
-};
-
-const stopGroup = (groupName) => {
-  groups.stopGroup(groupName);
-};
-
 const clear = () => {
   logger.clearConsole();
 };
@@ -96,7 +82,6 @@ const exit = () => {
 
 const commands = {
   ls: { expects: [], exec: ls },
-  'ls-groups': { expects: [], exec: lsGroups },
   start: { expects: [ParamType.app], exec: start },
   'start-excluded': { expects: [ParamType.app], exec: startExcluded },
   'start-only': { expects: [ParamType.app], exec: startOnly },
@@ -105,11 +90,8 @@ const commands = {
   stop: { expects: [ParamType.app], exec: stop },
   'stop-all': { expects: [], exec: stopAll },
   log: { expects: [ParamType.app], exec: log },
-  'start-group': { expects: [ParamType.group], exec: startGroup },
-  'stop-group': { expects: [ParamType.group], exec: stopGroup },
   cmd: { expects: [ParamType.app, ParamType.command], exec: cmd },
   'cmd-all': { expects: [ParamType.command], exec: cmdAll },
-  'cmd-group': { expects: [ParamType.group, ParamType.command], exec: cmdGroup },
   rebuild: { expects: [], exec: rebuild },
   clear: { expects: [], exec: clear },
   cls: { expects: [], exec: clear },
@@ -120,7 +102,6 @@ const commands = {
 const commandDescription = {
   log: 'Outputs log for app',
   ls: 'Lists all apps from config',
-  'ls-groups': 'Lists all groups from config',
   start: 'Starts app with dependencies',
   'start-excluded': 'Starts apps dependencies but not app itself',
   'start-only': 'Starts app only (without dependencies)',
@@ -128,12 +109,9 @@ const commandDescription = {
   restart: 'Restarts app',
   stop: 'Stops app',
   'stop-all': 'Stops all apps',
-  'start-group': 'Starts group',
-  'stop-group': 'Stops group',
   rebuild: 'Rebuilds dinman config',
   cmd: 'Executes command in app working directory',
   'cmd-all': 'Executes command in working directories of all apps',
-  'cmd-group': 'Executes command in working directories of group',
 };
 
 const hiddenCommands = ['help', 'exit', 'quit', 'cls', 'clear'];

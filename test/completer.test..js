@@ -15,7 +15,6 @@ describe('completer', () => {
         'start-excluded',
         'start-only',
         'start-all',
-        'start-group',
       ], 'sta']);
     });
   });
@@ -27,7 +26,7 @@ describe('completer', () => {
     });
 
     it('should return stop commands as suggestion', () => {
-      expect(result).to.deep.equal([['stop', 'stop-all', 'stop-group'], 'sto']);
+      expect(result).to.deep.equal([['stop', 'stop-all'], 'sto']);
     });
   });
 });

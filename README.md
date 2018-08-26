@@ -23,7 +23,6 @@ Now start dinman via `npm start` or `node .\index.js` and use the available comm
 ## Shell commands
 The node-instance-manager provides a shell with the following commands:
 - `ls` - Lists all apps from config
-- `ls-groups` - Lists all groups from config
 - `start [app]` - Starts an app with dependencies
 - `start-excluded [app]` - Starts apps dependencies but not app itself
 - `start-only [app]` - Starts app only (without dependencies)
@@ -32,11 +31,9 @@ The node-instance-manager provides a shell with the following commands:
 - `stop [app]` - Stops an app
 - `stop-all` - Stops all running apps
 - `log [app]` - Outputs the log for an app
-- `start-group [group]` - Starts a group
-- `stop-group [group]` - Stops a group
+- `rebuild` - Rebuilds dinman config (based on initally provided paths)
 - `cmd [app] [command]` - Executes command in app working dir (EXPERIMENTAL! Use at own risk.)
 - `cmd-all [command]` - Executes command for all apps in their working dirs (EXPERIMENTAL! Use at own risk.)
-- `cmd-group [group] [command]` - Executes command for a group in their working dirs (EXPERIMENTAL! Use at own risk.)
 
 ## Misc
 ### How it works

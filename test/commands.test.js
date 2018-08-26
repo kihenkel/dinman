@@ -34,7 +34,7 @@ describe('commands', () => {
       });
 
       it('should output correct amount of commands', () => {
-        expect(logger.info.callCount).to.equal(16 + 1);
+        expect(logger.info.callCount).to.equal(12 + 1);
       });
     });
 
