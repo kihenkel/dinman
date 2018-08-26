@@ -58,7 +58,7 @@ const setLogLevel = (newLogLevel) => {
     error(`Log level ${newLogLevel} doesnt exist.`);
     return;
   }
-  
+
   log(`Setting log level to ${newLogLevel} ...`);
   logLevel = newLogLevel;
 };

@@ -1,8 +1,8 @@
 const { commands, ParamType } = require('./commands');
-const config = require('./config');
+const { getConfig } = require('./config');
+const { getAppNames } = require('./repository');
 
-const groupNames = Object.keys(config.groups || {});
-const appNames = require('./repository').getAppNames();
+const groupNames = Object.keys(getConfig().groups || {});
 
 const commandNames = Object.keys(commands);
 const appCommands = Object.entries(commands)
@@ -20,7 +20,7 @@ const prefixCompletions = (completions, prefix) =>
 const getCompletionsForParam = (line, command) => {
   const isAppCommand = appCommands.some(appCommand => appCommand === command);
   if (isAppCommand) {
-    return prefixCompletions(appNames, command);
+    return prefixCompletions(getAppNames(), command);
   }
   const isGroupCommand = groupCommands.some(groupCommand => groupCommand === command);
   if (isGroupCommand) {

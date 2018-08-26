@@ -10,23 +10,19 @@ const logger = require('./../src/logger');
 const registerDependenciesForConfig = require('./registerDependenciesForConfig');
 const extractEntryFromStartScript = require('./extractEntryFromStartScript');
 const generateJsonFromConfig = require('./generateJsonFromConfig');
+const communication = require('./communication');
 
 const detectedApps = [];
 
 const registerApp = (folder) => {
   const packageJsonPath = path.join(folder, 'package.json');
-  let packageJsonExists;
   try {
-    packageJsonExists = fs.statSync(packageJsonPath);
+    fs.statSync(packageJsonPath);
   } catch (error) {
     logger.info(`${packageJsonPath} doesn't exist.`);
     return;
   }
 
-  if (!packageJsonExists) {
-    logger.info(`${packageJsonPath} doesn't exist.`);
-    return;
-  }
   const packageJsonRaw = fs.readFileSync(packageJsonPath, 'utf8');
   let packageJson;
   try {
@@ -67,17 +63,13 @@ const registerApp = (folder) => {
 
 const readConfigFromFolder = (app) => {
   const defaultJsonPath = path.join(app.path, 'config', 'default.json');
-  let configExists;
   try {
-    configExists = fs.statSync(defaultJsonPath);
+    fs.statSync(defaultJsonPath);
   } catch (error) {
     logger.info(`${defaultJsonPath} doesn't exist.`);
     return;
   }
-  if (!configExists) {
-    logger.info(`${defaultJsonPath} doesn't exist.`);
-    return;
-  }
+
   let configRaw = fs.readFileSync(defaultJsonPath, 'utf8');
   configRaw = stripJsonComments(configRaw);
   let config;
@@ -97,13 +89,13 @@ const readConfigFromFolder = (app) => {
   registerDependenciesForConfig(config, app, detectedApps);
 };
 
-const arguments = process.argv.slice(2);
-let paths = arguments;
+const args = process.argv.slice(2);
+let paths = args;
 
 const verboseParam = '--verbose';
-if (arguments.includes(verboseParam)) {
+if (args.includes(verboseParam)) {
   logger.setLogLevel('verbose');
-  paths = arguments.filter(arg => arg !== verboseParam);
+  paths = args.filter(arg => arg !== verboseParam);
 }
 
 if (paths.length <= 0) {
@@ -127,9 +119,11 @@ if (paths.length <= 0) {
   detectedApps.forEach(readConfigFromFolder);
 
   const fileToWrite = 'config.json';
-  fs.writeFileSync(fileToWrite, generateJsonFromConfig(detectedApps), 'utf8');
+  fs.writeFileSync(fileToWrite, generateJsonFromConfig(detectedApps, paths), 'utf8');
 
   logger.newLine();
   logger.info('===================================');
   logger.info(`Done! Wrote to file ${fileToWrite}!`);
+
+  communication.announceSuccess();
 }

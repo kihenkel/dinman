@@ -1,6 +1,6 @@
-const config = require('./config');
+const { getConfig } = require('./config');
 
-const looseDependencyTypes = config.looseDependencyTypes || [];
+const looseDependencyTypes = getConfig().looseDependencyTypes || [];
 const repository = require('./repository');
 const processes = require('./processes');
 const logger = require('./logger');

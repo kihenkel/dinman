@@ -1,8 +1,8 @@
-const config = require('./config');
+const { getConfig } = require('./config');
 const logger = require('./logger');
 const processes = require('./processes');
 
-const { groups } = config;
+const { groups } = getConfig();
 
 const listGroups = () => {
   if (!groups) {

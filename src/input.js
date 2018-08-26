@@ -1,6 +1,5 @@
+/* eslint-disable global-require */
 const readline = require('readline');
-const completer = require('./completer');
-const commands = require('./commands');
 
 const argumentMatch = /("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^/\\]*(?:\\[\S\s][^/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g;
 
@@ -11,11 +10,22 @@ let promptInternal = () => {
   throw new Error('Prompt not yet initialized, call listen() first!');
 };
 
-const prompt = () => {
-  promptInternal();
+let pauseInternal = () => {
+  throw new Error('Pause not yet initialized, call listen() first!');
 };
 
+let resumeInternal = () => {
+  throw new Error('Resume not yet initialized, call listen() first!');
+};
+
+const prompt = () => promptInternal();
+const pause = () => pauseInternal();
+const resume = () => resumeInternal();
+
 const listen = () => {
+  const commands = require('./commands');
+  const completer = require('./completer');
+
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -24,6 +34,14 @@ const listen = () => {
 
   promptInternal = () => {
     rl.prompt();
+  };
+
+  pauseInternal = () => {
+    rl.pause();
+  };
+
+  resumeInternal = () => {
+    rl.resume();
   };
 
   rl.on('line', async (input) => {
@@ -41,4 +59,6 @@ module.exports = {
   listen,
   prompt,
   parseInput,
+  pause,
+  resume,
 };

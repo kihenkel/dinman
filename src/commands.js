@@ -4,6 +4,7 @@ const repository = require('./repository');
 const dependencies = require('./dependencies');
 const processes = require('./processes');
 const groups = require('./groups');
+const rebuild = require('./rebuild');
 const { cmd, cmdAll, cmdGroup } = require('./cmd');
 
 const ParamType = {
@@ -109,6 +110,7 @@ const commands = {
   cmd: { expects: [ParamType.app, ParamType.command], exec: cmd },
   'cmd-all': { expects: [ParamType.command], exec: cmdAll },
   'cmd-group': { expects: [ParamType.group, ParamType.command], exec: cmdGroup },
+  rebuild: { expects: [], exec: rebuild },
   clear: { expects: [], exec: clear },
   cls: { expects: [], exec: clear },
   exit: { expects: [], exec: exit },
@@ -128,6 +130,7 @@ const commandDescription = {
   'stop-all': 'Stops all apps',
   'start-group': 'Starts group',
   'stop-group': 'Stops group',
+  rebuild: 'Rebuilds dinman config',
   cmd: 'Executes command in app working directory',
   'cmd-all': 'Executes command in working directories of all apps',
   'cmd-group': 'Executes command in working directories of group',
