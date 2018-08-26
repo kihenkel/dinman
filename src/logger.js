@@ -1,4 +1,4 @@
-const logLevel = 'info'; // verbose, info, warning, error
+let logLevel = 'info'; // verbose, info, warning, error
 
 const Color = {
   red: '\x1b[31m',
@@ -53,6 +53,16 @@ const newLine = () => {
   process.stdout.write('\n');
 };
 
+const setLogLevel = (newLogLevel) => {
+  if (!['verbose', 'info', 'warning', 'error'].includes(newLogLevel)) {
+    error(`Log level ${newLogLevel} doesnt exist.`);
+    return;
+  }
+  
+  log(`Setting log level to ${newLogLevel} ...`);
+  logLevel = newLogLevel;
+};
+
 module.exports = {
   error,
   warning,
@@ -62,4 +72,5 @@ module.exports = {
   negative,
   clearConsole,
   newLine,
+  setLogLevel,
 };

@@ -97,7 +97,15 @@ const readConfigFromFolder = (app) => {
   registerDependenciesForConfig(config, app, detectedApps);
 };
 
-const paths = process.argv.slice(2);
+const arguments = process.argv.slice(2);
+let paths = arguments;
+
+const verboseParam = '--verbose';
+if (arguments.includes(verboseParam)) {
+  logger.setLogLevel('verbose');
+  paths = arguments.filter(arg => arg !== verboseParam);
+}
+
 if (paths.length <= 0) {
   logger.error('No paths provided, configBuilder needs paths. Check configBuilder.js how to provide them.');
   process.exit(0);
