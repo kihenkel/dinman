@@ -17,7 +17,7 @@ const handleOnData = (appName, data) => {
   }
 };
 
-const handleOnAppExit = (appName) => {
+const clearAppLogs = (appName) => {
   logs[appName] = '';
 };
 
@@ -33,6 +33,6 @@ const showLog = (appName) => {
 
 module.exports = {
   onData: handleOnData,
-  onAppExit: handleOnAppExit,
+  clearAppLogs,
   showLog,
 };

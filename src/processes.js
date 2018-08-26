@@ -9,7 +9,6 @@ let input;
 
 const handleOnChildProcessExit = (appName) => {
   delete activeProcesses[appName];
-  logs.onAppExit(appName);
 };
 
 const startApp = (appName) => {
@@ -26,6 +25,7 @@ const startApp = (appName) => {
 
   const process = childProcess.spawn('node', [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
   logger.info(`Starting ${app.name} ...`);
+  logs.clearAppLogs(appName);
 
   process.stdout.on('data', (data) => {
     logs.onData(app.name, data);
