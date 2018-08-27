@@ -2,11 +2,15 @@
 // if config is being rebuilt via dinman itself
 
 const announceSuccess = () => {
-  process.send({ result: 'OK' });
+  if (process.send) {
+    process.send({ result: 'OK' });
+  }
 };
 
 const announceError = () => {
-  process.send({ result: 'NOK' });
+  if (process.send) {
+    process.send({ result: 'NOK' });
+  }
 };
 
 module.exports = {
