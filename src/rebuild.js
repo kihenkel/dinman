@@ -12,6 +12,7 @@ module.exports = () => new Promise((resolve) => {
 
   if (!buildPaths || !buildPaths.length) {
     logger.error('No build paths found! Cannot rebuild config.');
+    resolve();
     return;
   }
 
@@ -21,6 +22,7 @@ module.exports = () => new Promise((resolve) => {
     fs.statSync(configBuilderPath);
   } catch (error) {
     logger.info(`${configBuilderPath} doesn't exist.`);
+    resolve();
     return;
   }
 
