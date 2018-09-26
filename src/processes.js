@@ -24,7 +24,7 @@ const startApp = (appName) => {
   }
 
   const process = childProcess.spawn('node', [app.entry || defaults.PROJECT_ENTRY], { cwd: app.path });
-  logger.info(`Starting ${app.name} ...`);
+  logger.info(`Starting ${app.name} ${app.port ? `on port ${app.port} ` : ''}...`);
   logs.clearAppLogs(appName);
 
   process.stdout.on('data', (data) => {
