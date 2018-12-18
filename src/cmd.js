@@ -1,6 +1,7 @@
 const childProcess = require('child_process');
 const logger = require('./logger');
 const repository = require('./repository');
+const input = require('./input');
 
 const sanitizeCommand = (command) => {
   let sanitizedCommand = command;
@@ -26,11 +27,22 @@ const cmd = (appName, command) => {
   }
 
   logger.info(`Executing command '${sanitizedCommand}' in working dir ${app.path}. USE AT OWN RISK!`);
-  childProcess.exec(sanitizedCommand, { cwd: app.path }, (error) => {
+  childProcess.exec(sanitizedCommand, { cwd: app.path }, (error, stdout, stderr) => {
+    logger.newLine();
     if (error) {
       logger.error(`Error while executing command ${command} in working dir ${app.path}`);
-      logger.error(error);
+      logger.info(error);
     }
+
+    if (stderr) {
+      logger.info(`${appName}:`, stderr);
+    }
+
+    if (stdout) {
+      logger.info(`${appName}:`, stdout);
+    }
+    logger.info(`${appName}: Execution of command ${command} ended.`);
+    input.prompt();
   });
 };
 
