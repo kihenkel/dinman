@@ -33,7 +33,7 @@ const startApp = (appName) => {
 
   process.stderr.on('data', (data) => {
     logs.onData(app.name, data);
-    logger.error(`${app.name}: ${data}`);
+    logger.error(`${app.name}:`, data);
     if (!input) input = require('./input'); // eslint-disable-line global-require
     input.prompt();
   });
