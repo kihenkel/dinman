@@ -2,7 +2,7 @@ const logger = require('./logger');
 
 const logs = {};
 const MAX_LOG_SIZE_IN_BYTES = 1e+6; // 1 MB
-const START_CUT_OFF_PERCENTAGE = 0.2;
+const START_CUT_OFF_PERCENTAGE = 0.5;
 
 const handleOnData = (appName, data) => {
   if (!logs[appName]) {
