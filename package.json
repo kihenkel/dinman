@@ -1,6 +1,6 @@
 {
   "name": "dinman",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "description": "A Node.js application that manages other Node.js applications on-demand on a dependency basis.",
   "main": "index.js",
   "scripts": {
