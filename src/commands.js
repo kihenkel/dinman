@@ -16,17 +16,19 @@ const log = (app) => {
 };
 
 const ls = () => {
-  const appNames = repository.getAppNames();
-  if (!appNames.length) {
+  const apps = repository.getApps();
+  if (!apps.length) {
     logger.info('No apps registered.');
     return;
   }
 
-  appNames.sort().forEach((appName) => {
+  apps.forEach((app) => {
+    const appName = app.name;
+    const suffix = app.port && logger.asColor(`(at port ${app.port})`, logger.Color.gray);
     if (processes.isAppRunning(appName)) {
-      logger.positive('Running', appName);
+      logger.positive('Running', appName, suffix);
     } else {
-      logger.negative('Stopped', appName);
+      logger.negative('Stopped', appName, suffix);
     }
   });
 };

@@ -12,23 +12,23 @@ const Color = {
   yellow: '\x1b[33m',
   green: '\x1b[32m',
   white: '\x1b[37m',
+  gray: '\x1b[90m',
 };
 
 const log = (...msg) => {
   process.stdout.write(` ${msg.join(' ')}\n`);
 };
 
-const withColoredTag = (tag, color, ...msg) => {
-  log(`[${color}${tag}${Color.white}]`, ...msg);
-};
+const asColor = (msg, color) =>
+  `${color}${msg}${Color.white}`;
 
 const error = (...msg) => {
-  withColoredTag('ERROR', Color.red, ...msg);
+  log(`[${asColor('ERROR', Color.red)}]`, ...msg);
 };
 
 const warning = (...msg) => {
   if ([LogLevel.verbose, LogLevel.info, LogLevel.warning].includes(logLevel)) {
-    withColoredTag('Warning', Color.yellow, ...msg);
+    log(`[${asColor('Warning', Color.yellow)}]`, ...msg);
   }
 };
 
@@ -45,11 +45,11 @@ const verbose = (...msg) => {
 };
 
 const positive = (tag, ...msg) => {
-  withColoredTag(tag, Color.green, ...msg);
+  log(`[${asColor(tag, Color.green)}]`, ...msg);
 };
 
 const negative = (tag, ...msg) => {
-  withColoredTag(tag, Color.red, ...msg);
+  log(`[${asColor(tag, Color.red)}]`, ...msg);
 };
 
 const clearConsole = () => {
@@ -71,6 +71,7 @@ const setLogLevel = (newLogLevel) => {
 };
 
 module.exports = {
+  asColor,
   error,
   warning,
   info,
@@ -80,4 +81,5 @@ module.exports = {
   clearConsole,
   newLine,
   setLogLevel,
+  Color,
 };

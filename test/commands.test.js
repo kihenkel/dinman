@@ -39,25 +39,30 @@ describe('commands', () => {
     });
 
     describe('When running ls command', () => {
-      let getAppNamesStub;
+      let getAppsStub;
       before(() => {
-        getAppNamesStub = sinon.stub(repository, 'getAppNames');
+        getAppsStub = sinon.stub(repository, 'getApps');
         sinon.stub(logger, 'negative');
       });
       
       afterEach(() => {
-        repository.getAppNames.resetHistory();
+        repository.getApps.resetHistory();
         logger.negative.resetHistory();
       });
     
       after(() => {
-        repository.getAppNames.restore();
+        repository.getApps.restore();
         logger.negative.restore();
       });
 
       describe('and 4 apps are registered', () => {
         beforeEach(() => {
-          getAppNamesStub.returns(['app1', 'app2', 'app3', 'app4']);
+          getAppsStub.returns([
+            { name: 'app1' },
+            { name: 'app2' },
+            { name: 'app3' },
+            { name: 'app4' },
+          ]);
           run('ls');
         });
   
@@ -73,7 +78,7 @@ describe('commands', () => {
 
       describe('and no apps are registered', () => {
         beforeEach(() => {
-          getAppNamesStub.returns([]);
+          getAppsStub.returns([]);
           run('ls');
         });
   

@@ -50,7 +50,8 @@ const registerApp = (folder) => {
   }
 
   if (packageJson.name && !detectedApps.includes(packageJson.name)) {
-    logger.info(`Detected app ${packageJson.name} with port ${port}`);
+    logger.info(`Detected app ${packageJson.name}${port ? ` with port ${port}` : ''}.`);
+
     detectedApps.push({
       name: packageJson.name,
       port,

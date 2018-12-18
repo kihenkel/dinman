@@ -1,9 +1,10 @@
 const path = require('path');
 
 const mapDetectedApp = (detectedApp) => {
-  const { name, entry } = detectedApp;
+  const { name, entry, port } = detectedApp;
   return {
     name,
+    port,
     type: name.slice(name.lastIndexOf('-') + 1),
     path: detectedApp.path,
     entry,

@@ -3,7 +3,13 @@ const { getConfig } = require('./config');
 let apps;
 let appNames;
 const init = () => {
-  apps = getConfig().apps || [];
+  const sortByAppName = (a, b) => {
+    if (a.name > b.name) return 1;
+    if (a.name < b.name) return -1;
+    return 0;
+  };
+
+  apps = getConfig().apps.sort(sortByAppName) || [];
   appNames = apps.map(app => app.name);
 };
 
