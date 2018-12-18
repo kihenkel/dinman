@@ -33,7 +33,7 @@ const listen = () => {
   });
 
   promptInternal = () => {
-    rl.prompt();
+    rl.prompt(true);
   };
 
   pauseInternal = () => {
