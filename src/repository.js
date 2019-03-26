@@ -9,7 +9,7 @@ const init = () => {
     return 0;
   };
 
-  apps = getConfig().apps.sort(sortByAppName) || [];
+  apps = (getConfig().apps || []).sort(sortByAppName);
   appNames = apps.map(app => app.name);
 };
 
