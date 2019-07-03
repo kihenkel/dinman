@@ -1,0 +1,17 @@
+{
+  "profils": [
+    {
+      "name": "profil1",
+      "apps": [
+       "First APP to execute",
+       "Second APP to execute"
+      ]
+   },
+   {
+    "name": "profil2",
+    "apps": [
+     "First APP to execute"
+    ]
+ }
+  ]
+}

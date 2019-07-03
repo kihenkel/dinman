@@ -4,10 +4,12 @@ const repository = require('./repository');
 const dependencies = require('./dependencies');
 const processes = require('./processes');
 const rebuild = require('./rebuild');
+const startProfil = require('./startProfil');
 const { cmd, cmdAll } = require('./cmd');
 
 const ParamType = {
   app: 'app',
+  profil: 'profil',
   command: 'command',
 };
 
@@ -43,6 +45,13 @@ const startExcluded = (appName) => {
 
 const startOnly = (appName) => {
   processes.startApp(appName);
+};
+
+const startProfilApps = (profilName) => {
+  const profil = startProfil.getProfilByName(profilName);
+  profil.apps.forEach((appName) => {
+    dependencies.startApp(appName);
+  });
 };
 
 const startAll = () => {
@@ -87,6 +96,7 @@ const commands = {
   start: { expects: [ParamType.app], exec: start },
   'start-excluded': { expects: [ParamType.app], exec: startExcluded },
   'start-only': { expects: [ParamType.app], exec: startOnly },
+  'start-profil': { expects: [ParamType.profil], exec: startProfilApps },
   'start-all': { expects: [], exec: startAll },
   restart: { expects: [ParamType.app], exec: restart },
   stop: { expects: [ParamType.app], exec: stop },
@@ -108,6 +118,7 @@ const commandDescription = {
   'start-excluded': 'Starts apps dependencies but not app itself',
   'start-only': 'Starts app only (without dependencies)',
   'start-all': 'Starts all apps',
+  'start-profil': 'Starts all APPS which are inside a configured profil',
   restart: 'Restarts app',
   stop: 'Stops app',
   'stop-all': 'Stops all apps',
