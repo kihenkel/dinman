@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const completer = require('./../src/completer');
+const completer = require('../src/completer');
 
 describe('completer', () => {
   describe('When typing in line sta', () => {
@@ -14,6 +14,7 @@ describe('completer', () => {
         'start',
         'start-excluded',
         'start-only',
+        'start-profile',
         'start-all',
       ], 'sta']);
     });

@@ -3,6 +3,8 @@ const logs = require('./logs');
 const repository = require('./repository');
 const logger = require('./logger');
 const defaults = require('./defaults');
+const profile = require('./profile');
+const dependencies = require('./dependencies');
 
 const activeProcesses = {};
 let input;
@@ -101,6 +103,28 @@ const restartApp = appName => new Promise((resolve) => {
   stopApp(appName);
 });
 
+const startProfile = (profileName) => {
+  const currentProfile = profile.getProfileByName(profileName);
+  if (!currentProfile) {
+    logger.info(`Profile ${profileName} not found.`);
+    return false;
+  }
+
+  currentProfile.apps.forEach((appName) => {
+    const app = repository.getAppByName(appName);
+    if (!app) {
+      logger.info(`App ${appName} not found.`);
+      return false;
+    }
+    logger.info(`App ${appName} is starting.`);
+    dependencies.startApp(appName);
+    return true;
+  });
+
+
+  logger.info('Finished with starting the profile');
+  return true;
+};
 const isAppRunning = appName => !!activeProcesses[appName];
 
 module.exports = {
@@ -108,5 +132,6 @@ module.exports = {
   stopApp,
   stopAll,
   restartApp,
+  startProfile,
   isAppRunning,
 };
