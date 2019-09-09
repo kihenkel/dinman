@@ -23,11 +23,11 @@ const loadDependencyConfig = () => {
   return dependencyConfig;
 };
 
-const loadProfilConfig = () => {
+const loadProfileConfig = () => {
   let mainConfig;
   try {
-    require.resolve('./../startProfil.json');
-    mainConfig = require('./../startProfil.json');
+    require.resolve('./../profile.json');
+    mainConfig = require('./../profile.json');
   } catch (error) {
     mainConfig = {};
   }
@@ -37,8 +37,8 @@ const loadProfilConfig = () => {
 const initConfig = () => {
   const mainConfig = loadMainConfig();
   const dependencyConfig = loadDependencyConfig();
-  const startProfilConfig = loadProfilConfig();
-  config = Object.assign({}, mainConfig, dependencyConfig, startProfilConfig);
+  const startProfileConfig = loadProfileConfig();
+  config = Object.assign({}, mainConfig, dependencyConfig, startProfileConfig);
 };
 
 initConfig();
@@ -48,7 +48,7 @@ module.exports = {
   reloadConfig: () => {
     let mainConfigPath;
     let dependencyConfigPath;
-    let profilConfigPath;
+    let profileConfigPath;
     try {
       mainConfigPath = require.resolve('./../config.json');
     } catch (error) {
@@ -60,13 +60,13 @@ module.exports = {
       dependencyConfigPath = undefined;
     }
     try {
-      profilConfigPath = require.resolve('./../startProfil.json');
+      profileConfigPath = require.resolve('./../profile.json');
     } catch (error) {
-      profilConfigPath = undefined;
+      profileConfigPath = undefined;
     }
     delete require.cache[mainConfigPath];
     delete require.cache[dependencyConfigPath];
-    delete require.cache[profilConfigPath];
+    delete require.cache[profileConfigPath];
     initConfig();
   },
 };

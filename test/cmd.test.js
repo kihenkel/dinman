@@ -10,7 +10,7 @@ describe('cmd', () => {
 
     describe('When command does not start with quotes', () => {
       before(() => {
-        inputCommand = `this is some command`;
+        inputCommand = 'this is some command';
       });
 
       it('should sanitize double quotes', () => {
@@ -20,7 +20,7 @@ describe('cmd', () => {
 
     describe('When command starts and ends with double quotes', () => {
       before(() => {
-        inputCommand = `"this is some command"`;
+        inputCommand = '"this is some command"';
       });
 
       it('should sanitize double quotes', () => {
@@ -30,7 +30,7 @@ describe('cmd', () => {
 
     describe('When command starts and ends with single quotes', () => {
       before(() => {
-        inputCommand = `'this is some command'`;
+        inputCommand = '\'this is some command\'';
       });
 
       it('should sanitize double quotes', () => {
@@ -67,7 +67,7 @@ describe('cmd', () => {
 
       it('should not call exec', () => {
         expect(childProcess.exec.called).to.be.false;
-      })
+      });
     });
 
     describe('When one argument is provided', () => {
@@ -82,7 +82,7 @@ describe('cmd', () => {
 
       it('should not call exec', () => {
         expect(childProcess.exec.called).to.be.false;
-      })
+      });
     });
 
     describe('When app is unknown', () => {
@@ -97,7 +97,7 @@ describe('cmd', () => {
 
       it('should not call exec', () => {
         expect(childProcess.exec.called).to.be.false;
-      })
+      });
     });
   });
 });

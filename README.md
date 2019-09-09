@@ -27,7 +27,7 @@ The node-instance-manager provides a shell with the following commands:
 - `start-excluded [app]` - Starts apps dependencies but not app itself
 - `start-only [app]` - Starts app only (without dependencies)
 - `start-all` - Starts all apps from config
-- `start-profil [profil]` - Starts all APPS which are inside a configured profil
+- `start-profile [profile]` - Starts all apps which are inside a configured profile
 - `restart [app]` - Restarts an app
 - `stop [app]` - Stops an app
 - `stop-all` - Stops all running apps
@@ -67,7 +67,28 @@ To do so, add a `dependencyConfig.json` to your root folder:
 
 This configures eg. the type `app` to be a *loose* dependency to `service`. If now a service has a dependency to an app, the app will not start automatically.
 
-### Configure default profils
-If you want to start mutltiply APPs which aren´t connect to each others via a dependency, then you can configure a profil. 
-To do this, you only need to name your profile in startProfile.json and specify which apps yout want to be started.
-To start your profil you only have to type `start-profil profil-name`, then all your previously specified APPs and their Subapps will be executed.
+### Configure default profiles
+If you want to start multiple apps which aren't connected to each other via dependencies, then you can configure a profile. 
+To do this you only need to name your profile in startProfile.json and specify which apps you want to be started.
+To start your profile you only have to type `start-profile profile-name`, then all your previously specified apps and their dependencies will be started.
+
+Example profile.json:
+{
+  "profiles": [
+    {
+      "name": "profile1",
+      "apps": [
+       "First APP to execute",
+       "Second APP to execute"
+      ]
+   },
+   {
+    "name": "profileName",
+    "apps": [
+     "App-1",
+     "App-2",
+     "App-3"
+    ]
+ }
+  ]
+}

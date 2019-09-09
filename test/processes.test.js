@@ -66,7 +66,7 @@ describe('processes', () => {
         it('should not spawn child process', () => {
           expect(childProcess.spawn.called).to.be.false;
         });
-  
+
         it('should give user hint that app is already running', () => {
           expect(logger.info.callCount).to.equal(1);
           expect(logger.info.args[0]).to.be.deep.equal(['App knownApp is already running!']);
