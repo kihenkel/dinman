@@ -4,3 +4,4 @@ config/
 logs/
 config.json
 dependencyConfig.json
+profile.json
