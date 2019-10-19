@@ -8,6 +8,7 @@ const { cmd, cmdAll } = require('./cmd');
 
 const ParamType = {
   app: 'app',
+  profile: 'profile',
   command: 'command',
 };
 
@@ -43,6 +44,10 @@ const startExcluded = (appName) => {
 
 const startOnly = (appName) => {
   processes.startApp(appName);
+};
+
+const startProfileApps = (profileName) => {
+  dependencies.startProfile(profileName);
 };
 
 const startAll = () => {
@@ -87,6 +92,7 @@ const commands = {
   start: { expects: [ParamType.app], exec: start },
   'start-excluded': { expects: [ParamType.app], exec: startExcluded },
   'start-only': { expects: [ParamType.app], exec: startOnly },
+  'start-profile': { expects: [ParamType.profile], exec: startProfileApps },
   'start-all': { expects: [], exec: startAll },
   restart: { expects: [ParamType.app], exec: restart },
   stop: { expects: [ParamType.app], exec: stop },
@@ -108,6 +114,7 @@ const commandDescription = {
   'start-excluded': 'Starts apps dependencies but not app itself',
   'start-only': 'Starts app only (without dependencies)',
   'start-all': 'Starts all apps',
+  'start-profile': 'Starts all apps which are inside a configured profile',
   restart: 'Restarts app',
   stop: 'Stops app',
   'stop-all': 'Stops all apps',

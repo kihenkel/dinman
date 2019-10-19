@@ -34,7 +34,7 @@ describe('commands', () => {
       });
 
       it('should output correct amount of commands', () => {
-        expect(logger.info.callCount).to.equal(12 + 1);
+        expect(logger.info.callCount).to.equal(14);
       });
     });
 
@@ -44,12 +44,12 @@ describe('commands', () => {
         getAppsStub = sinon.stub(repository, 'getApps');
         sinon.stub(logger, 'negative');
       });
-      
+
       afterEach(() => {
         repository.getApps.resetHistory();
         logger.negative.resetHistory();
       });
-    
+
       after(() => {
         repository.getApps.restore();
         logger.negative.restore();
@@ -65,7 +65,7 @@ describe('commands', () => {
           ]);
           run('ls');
         });
-  
+
         it('should list all apps', () => {
           expect(logger.info.callCount).to.equal(0);
           expect(logger.negative.callCount).to.equal(4);
@@ -81,7 +81,7 @@ describe('commands', () => {
           getAppsStub.returns([]);
           run('ls');
         });
-  
+
         it('should tell user that no apps are found', () => {
           expect(logger.info.calledOnce).to.be.true;
           expect(logger.info.args[0]).to.be.deep.equal(['No apps registered.']);
